@@ -3,8 +3,38 @@
   <groupId>de.mindscan.furiousiron</groupId>
   <artifactId>FuriousIron-HFB</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>  
+  
+  <dependencies>
+  
+	<!-- https://mvnrepository.com/artifact/junit/junit -->
+	<dependency>
+		<groupId>org.junit.jupiter</groupId>
+		<artifactId>junit-jupiter-engine</artifactId>
+		<version>5.6.2</version>
+		<scope>test</scope>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest -->
+	<dependency>
+	    <groupId>org.hamcrest</groupId>
+	    <artifactId>hamcrest</artifactId>
+	    <version>2.2</version>
+	    <scope>test</scope>
+	</dependency>
+	
+	
+  </dependencies>
+  
+  
+  
+  
   <build>
     <sourceDirectory>src</sourceDirectory>
+    <testSourceDirectory>test</testSourceDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -16,4 +46,5 @@
       </plugin>
     </plugins>
   </build>
+  
 </project>
