@@ -28,6 +28,6 @@ package de.mindscan.furiousiron.hfb;
 /**
  * 
  */
-public class HFBFilterBankWriterV1Impl {
+public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
 
 }
