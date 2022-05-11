@@ -68,6 +68,10 @@ public class HFBFilterBank {
         }
     }
 
+    public int getNumberOfFilters() {
+        return hfbfilters.size();
+    }
+
     public void addDocumentId( BigInteger documentId ) {
         // we use each HFBFilterdata and add it to each filter we currently know.
         for (HFBFilterData filter : hfbfilters) {
