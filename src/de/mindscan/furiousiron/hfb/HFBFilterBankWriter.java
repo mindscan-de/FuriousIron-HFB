@@ -30,4 +30,11 @@ package de.mindscan.furiousiron.hfb;
  */
 public interface HFBFilterBankWriter {
 
+    /**
+     * Write the content of the FilterBank to outputPath.
+     * 
+     * @param filterBank the FilterBank to save
+     * @param outputPath the path
+     */
+    void write( HFBFilterBank filterBank, String outputPath );
 }
