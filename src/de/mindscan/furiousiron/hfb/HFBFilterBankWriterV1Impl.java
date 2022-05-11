@@ -30,4 +30,27 @@ package de.mindscan.furiousiron.hfb;
  */
 public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
 
+    public final static String FILE_SUFFIX = "hfbv1";
+
+    /** 
+     * {@inheritDoc}
+     */
+    @Override
+    public void write( HFBFilterBank filterBank, String outputPath ) {
+
+        int numberOfFilters = filterBank.getNumberOfFilters();
+
+        // for each filter save filter to output file
+        for (int i = 0; i < numberOfFilters; i++) {
+            HFBFilterData filterData = filterBank.getFilterData( i );
+            // we want to write the number of bits
+            // we want to write the 
+            //
+            int slicePosition = filterData.getSlicePosition();
+            int sliceBitSize = filterData.getSliceBitSize();
+            byte[] sliceData = filterData.getSliceData();
+        }
+
+    }
+
 }
