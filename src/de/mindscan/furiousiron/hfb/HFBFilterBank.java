@@ -72,6 +72,13 @@ public class HFBFilterBank {
         return hfbfilters.size();
     }
 
+    public HFBFilterData getFilterData( int filterbankIndex ) {
+        if (filterbankIndex < 0 || filterbankIndex >= hfbfilters.size()) {
+            throw new IllegalArgumentException( "FilterbankIndex is invalid" );
+        }
+        return hfbfilters.get( filterbankIndex );
+    }
+
     public void addDocumentId( BigInteger documentId ) {
         // we use each HFBFilterdata and add it to each filter we currently know.
         for (HFBFilterData filter : hfbfilters) {
@@ -110,4 +117,5 @@ public class HFBFilterBank {
         }
         return true;
     }
+
 }
