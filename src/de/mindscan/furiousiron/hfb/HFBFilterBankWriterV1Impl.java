@@ -50,6 +50,7 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             int sliceBitSize = filterData.getSliceBitSize();
             byte[] sliceData = filterData.getSliceData();
 
+            // also add marker and length data.
             // TODO write the index and the position, the sliced bits and the slicedata (also the number of bytes)
         }
 
