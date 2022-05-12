@@ -29,5 +29,5 @@ package de.mindscan.furiousiron.hfb;
  * 
  */
 public interface HFBFilterBankReader {
-
+    HFBFilterBank readFromFile( String filePath );
 }
