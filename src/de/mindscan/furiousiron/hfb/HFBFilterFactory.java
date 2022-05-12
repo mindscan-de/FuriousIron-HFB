@@ -34,7 +34,7 @@ public class HFBFilterFactory {
 
     public HFBFilterBank fromFile( String filePath ) {
         if (filePath.endsWith( HFBFilterBankWriterV1Impl.FILE_SUFFIX )) {
-
+            return readerv1.readFromFile( filePath );
         }
 
         throw new IllegalArgumentException( "unknown file format." );
