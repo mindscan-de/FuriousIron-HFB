@@ -25,6 +25,11 @@
  */
 package de.mindscan.furiousiron.hfb;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 /**
  * 
  */
@@ -35,6 +40,32 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
      */
     @Override
     public HFBFilterBank readFromFile( String filePath ) {
+        try (BufferedReader reader = Files.newBufferedReader( Paths.get( filePath ) )) {
+
+            // TODO expect "HFB.v1" (6 Bytes),
+            // (0x00,0x00) 2 bytes)
+
+            HFBFilterBank filterBank = new HFBFilterBank();
+
+            // bits in documentId (4 bytes) 
+            int bitsInDocumentId = 128;
+
+            // number of documents in filter (8 bytes)
+            long occurenceCount = 10000L;
+
+            // loadfactor (4 bytes)
+            int loadFactor = 5;
+
+            // TODO: do initialization. / shaping of the filterbank 
+            filterBank.initFilters( bitsInDocumentId, occurenceCount, loadFactor );
+
+            // 
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         // TODO Auto-generated method stub
         return null;
     }
