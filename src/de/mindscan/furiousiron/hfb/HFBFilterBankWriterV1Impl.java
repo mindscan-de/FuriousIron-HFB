@@ -37,6 +37,14 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
      */
     @Override
     public void write( HFBFilterBank filterBank, String outputPath ) {
+        // TODO write header
+        // Write number of filters
+        // write size
+        // write filterBank.bitsOfDocumentId;
+        // write filterBank.numberODocumentsInfilter
+        // write loadfactor?
+        // or just the slice size?
+        // number of documents in filter is nice for later analysis of effectiveness.
 
         int numberOfFilters = filterBank.getNumberOfFilters();
 
