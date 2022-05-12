@@ -30,4 +30,13 @@ package de.mindscan.furiousiron.hfb;
  */
 public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
 
+    /** 
+     * {@inheritDoc}
+     */
+    @Override
+    public HFBFilterBank readFromFile( String filePath ) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
