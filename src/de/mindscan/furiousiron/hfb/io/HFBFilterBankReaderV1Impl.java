@@ -32,6 +32,7 @@ import java.nio.file.Paths;
 
 import de.mindscan.furiousiron.hfb.HFBFilterBank;
 import de.mindscan.furiousiron.hfb.HFBFilterBankReader;
+import de.mindscan.furiousiron.hfb.HFBFilterData;
 
 /**
  * 
@@ -59,10 +60,25 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
             // loadfactor (4 bytes)
             int loadFactor = 5;
 
+            int numberOfFilters = 3;
+
             // TODO: do initialization. / shaping of the filterbank 
             filterBank.initFilters( bitsInDocumentId, occurenceCount, loadFactor );
 
             // 
+            for (int i = 0; i < numberOfFilters; i++) {
+                // read current filterbank position
+                // read current filterbank data
+                // read more stuff.
+                int current_filterbankIndex = 0;
+
+                HFBFilterData filterData = filterBank.getFilterData( current_filterbankIndex );
+
+                // verify with read data
+
+                filterData.setSliceData( new byte[0] );
+            }
+
         }
         catch (IOException e) {
             // TODO Auto-generated catch block
