@@ -25,6 +25,12 @@
  */
 package de.mindscan.furiousiron.hfb.io;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+
 import de.mindscan.furiousiron.hfb.HFBFilterBank;
 import de.mindscan.furiousiron.hfb.HFBFilterBankWriter;
 import de.mindscan.furiousiron.hfb.HFBFilterData;
@@ -36,12 +42,28 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
 
     public final static String FILE_SUFFIX = "hfbv1";
 
+    public final static byte[] HFB_MARKER = { 0x48, 0x46, 0x42, 0x2e };
+    public final static byte[] V1__MARKER = { 0x76, 0x31, 0x00, 0x00 };
+
     /** 
      * {@inheritDoc}
      */
     @Override
     public void write( HFBFilterBank filterBank, String outputPath ) {
-        // TODO write header
+        try (OutputStream writer = Files.newOutputStream( Paths.get( outputPath ), StandardOpenOption.TRUNCATE_EXISTING )) {
+
+            // write HFB Marker Header
+            writer.write( HFB_MARKER );
+            // write HFB Version Information
+            writer.write( V1__MARKER );
+
+            writer.flush();
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         // Write number of filters
         // write size
         // write filterBank.bitsOfDocumentId;
@@ -54,10 +76,13 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
 
         // for each filter save filter to output file
         for (int i = 0; i < numberOfFilters; i++) {
+            // header for a filterdata
+
             HFBFilterData filterData = filterBank.getFilterData( i );
             // we want to write the number of bits
             // we want to write the 
-            //
+            //current numberof filterbank
+
             int slicePosition = filterData.getSlicePosition();
             int sliceBitSize = filterData.getSliceBitSize();
             byte[] sliceData = filterData.getSliceData();
