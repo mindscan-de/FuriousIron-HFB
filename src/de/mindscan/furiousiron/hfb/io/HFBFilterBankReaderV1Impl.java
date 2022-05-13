@@ -23,12 +23,15 @@
  * SOFTWARE.
  * 
  */
-package de.mindscan.furiousiron.hfb;
+package de.mindscan.furiousiron.hfb.io;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import de.mindscan.furiousiron.hfb.HFBFilterBank;
+import de.mindscan.furiousiron.hfb.HFBFilterBankReader;
 
 /**
  * 

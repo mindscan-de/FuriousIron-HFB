@@ -25,6 +25,9 @@
  */
 package de.mindscan.furiousiron.hfb;
 
+import de.mindscan.furiousiron.hfb.io.HFBFilterBankReaderV1Impl;
+import de.mindscan.furiousiron.hfb.io.HFBFilterBankWriterV1Impl;
+
 /**
  * 
  */
