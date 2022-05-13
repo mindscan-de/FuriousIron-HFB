@@ -82,7 +82,7 @@ public class HFBFilterData {
     // TODO: write to the byte buffer and mark document occurrences
     // TODO: check the buffer, whether it contains a value 
 
-    void setSliceData( byte[] filterData ) {
+    public void setSliceData( byte[] filterData ) {
         this.sliceData = filterData;
     }
 
