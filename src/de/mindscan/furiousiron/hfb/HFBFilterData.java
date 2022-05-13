@@ -86,7 +86,7 @@ public class HFBFilterData {
         this.sliceData = filterData;
     }
 
-    byte[] getSliceData() {
+    public byte[] getSliceData() {
         return this.sliceData;
     }
 
