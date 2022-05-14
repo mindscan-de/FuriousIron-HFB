@@ -52,8 +52,8 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
     public final static int HFB_MARKER = 0x4846422e;
     // 'v1', 0x00, 0x00
     public final static int HFB_V1_MARKER = 0x76310000;
-    // 'HFBD'
-    public final static int HFB_FILTERDATA_MARKER = 0x48464244;
+    // 'FDv1'
+    public final static int HFB_FILTERDATA_MARKER = 0x46447631;
 
     /** 
      * {@inheritDoc}
