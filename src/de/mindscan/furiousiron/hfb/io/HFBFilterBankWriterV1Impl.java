@@ -42,10 +42,9 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
     public final static String FILE_SUFFIX = "hfbv1";
     public final static String FILE_DOT_SUFFIX = ".hfbv1";
 
-    public final static byte[] HFB_MARKER = { 0x48, 0x46, 0x42, 0x2e };
+    // 'HFB.'
     public final static int INT_HFB_MARKER = 0x4846422e;
-
-    public final static byte[] V1_MARKER = { 0x76, 0x31, 0x00, 0x00 };
+    // 'v1', 0x00, 0x00
     public final static int INT_V1_MARKER = 0x76310000;
 
     /** 
@@ -53,16 +52,24 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
      */
     @Override
     public void write( HFBFilterBank filterBank, String outputPath ) {
+
         if (!outputPath.endsWith( FILE_DOT_SUFFIX )) {
             outputPath = outputPath + FILE_DOT_SUFFIX;
         }
 
         try (OutputStream writer = Files.newOutputStream( Paths.get( outputPath ), StandardOpenOption.TRUNCATE_EXISTING )) {
 
-            // write HFB Marker Header
-            writer.write( HFB_MARKER );
-            // write HFB Version Information
-            writer.write( V1_MARKER );
+            // write HFB Marker Header -- 4 bytes
+            writer.write( RawUtils.toByteArray4b( INT_HFB_MARKER ) );
+            // write HFB Version Information -- 4 bytes
+            writer.write( RawUtils.toByteArray4b( INT_V1_MARKER ) );
+
+            // write GetBitsInDocumentId -- 4bytes
+            writer.write( RawUtils.toByteArray4b( filterBank.getBitsInDocumentId() ) );
+            // write Number of occurrences / number of documents -- 8 bytes
+            writer.write( RawUtils.toByteArray8b( filterBank.getOccurrenceCount() ) );
+            // write spread factor / load factor -- 4 bytes
+            writer.write( RawUtils.toByteArray4b( filterBank.getLoadFactor() ) );
 
             writer.flush();
         }
