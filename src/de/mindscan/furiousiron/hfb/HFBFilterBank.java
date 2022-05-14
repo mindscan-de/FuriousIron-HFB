@@ -43,6 +43,9 @@ import java.util.List;
 public class HFBFilterBank {
 
     private List<HFBFilterData> hfbfilters = new ArrayList<>();
+    private int bitsInDocumentId;
+    private long occurrenceCount;
+    private int loadFactor;
 
     /**
      * 
@@ -57,6 +60,10 @@ public class HFBFilterBank {
      * @param loadFactor set it to 5 (five)
      */
     public void initFilters( int bitsInDocumentId, long occurenceCount, int loadFactor ) {
+        this.bitsInDocumentId = bitsInDocumentId;
+        this.occurrenceCount = occurenceCount;
+        this.loadFactor = loadFactor;
+
         long highestBitMasked = Long.highestOneBit( occurenceCount * loadFactor );
         int sliceSize = (int) Long.numberOfTrailingZeros( highestBitMasked );
 
@@ -118,4 +125,24 @@ public class HFBFilterBank {
         return true;
     }
 
+    /**
+     * @return the bitsInDocumentId
+     */
+    public int getBitsInDocumentId() {
+        return bitsInDocumentId;
+    }
+
+    /**
+     * @return the occurrenceCount
+     */
+    public long getOccurrenceCount() {
+        return occurrenceCount;
+    }
+
+    /**
+     * @return the loadFactor
+     */
+    public int getLoadFactor() {
+        return loadFactor;
+    }
 }
