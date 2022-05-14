@@ -33,6 +33,7 @@ import java.nio.file.StandardOpenOption;
 
 import de.mindscan.furiousiron.hfb.HFBFilterBank;
 import de.mindscan.furiousiron.hfb.HFBFilterBankWriter;
+import de.mindscan.furiousiron.hfb.HFBFilterData;
 
 /**
  * 
@@ -64,12 +65,28 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             // write HFB Version Information -- 4 bytes
             writer.write( RawUtils.toByteArray4b( INT_V1_MARKER ) );
 
+            // [option 2: is writing the chosen slice size ]
+            // [option 2: this would be more future proof if allocation mechanism changes ]
+            // [option 2: number of documents still interesting, for further optimizations ]
+
             // write GetBitsInDocumentId -- 4bytes
             writer.write( RawUtils.toByteArray4b( filterBank.getBitsInDocumentId() ) );
             // write Number of occurrences / number of documents -- 8 bytes
             writer.write( RawUtils.toByteArray8b( filterBank.getOccurrenceCount() ) );
             // write spread factor / load factor -- 4 bytes
             writer.write( RawUtils.toByteArray4b( filterBank.getLoadFactor() ) );
+
+            // now write the number of preserved/serialized filterdata
+            // currently we will save all of them.
+            writer.write( RawUtils.toByteArray4b( filterBank.getNumberOfFilters() ) );
+            for (int filterID = 0; filterID < filterBank.getNumberOfFilters(); filterID++) {
+                // TODO: write filterdataheader
+
+                HFBFilterData filterData = filterBank.getFilterData( filterID );
+                // TODO: write filterdata configuration
+                // TODO: write length of filterdata in bytes
+                // TODO: write filterdata of current filterID 
+            }
 
             writer.flush();
         }
@@ -78,21 +95,6 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             e.printStackTrace();
         }
 
-        // Write number of filters
-        // write size
-        // write filterBank.bitsOfDocumentId;
-        // write filterBank.numberODocumentsInfilter
-        // write loadfactor?
-        // or just the slice size?
-        // number of documents in filter is nice for later analysis of effectiveness.
-
-//        int numberOfFilters = filterBank.getNumberOfFilters();
-//
-//        // for each filter save filter to output file
-//        for (int i = 0; i < numberOfFilters; i++) {
-//            // header for a filterdata
-//
-//            HFBFilterData filterData = filterBank.getFilterData( i );
 //            // we want to write the number of bits
 //            // we want to write the 
 //            //current numberof filterbank
@@ -103,7 +105,6 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
 //
 //            // also add marker and length data.
 //            // TODO write the index and the position, the sliced bits and the slicedata (also the number of bytes)
-//        }
 
     }
 
