@@ -47,8 +47,8 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
 
             byte[] hfb_header_buffer = reader.readNBytes( 28 );
 
-            boolean isHFB = RawUtils.isMarker4b( hfb_header_buffer, 0, HFBFilterBankWriterV1Impl.INT_HFB_MARKER );
-            boolean isV1 = RawUtils.isMarker4b( hfb_header_buffer, 4, HFBFilterBankWriterV1Impl.INT_V1_MARKER );
+            boolean isHFB = RawUtils.isMarker4b( hfb_header_buffer, 0, HFBFilterBankWriterV1Impl.HFB_MARKER );
+            boolean isV1 = RawUtils.isMarker4b( hfb_header_buffer, 4, HFBFilterBankWriterV1Impl.HFB_V1_MARKER );
 
             if (!isHFB) {
                 throw new FileFormatException( "This is not a HFB-File." );

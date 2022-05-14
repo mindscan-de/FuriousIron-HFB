@@ -44,9 +44,9 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
     public final static String FILE_DOT_SUFFIX = ".hfbv1";
 
     // 'HFB.'
-    public final static int INT_HFB_MARKER = 0x4846422e;
+    public final static int HFB_MARKER = 0x4846422e;
     // 'v1', 0x00, 0x00
-    public final static int INT_V1_MARKER = 0x76310000;
+    public final static int HFB_V1_MARKER = 0x76310000;
 
     /** 
      * {@inheritDoc}
@@ -61,9 +61,9 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
         try (OutputStream writer = Files.newOutputStream( Paths.get( outputPath ), StandardOpenOption.TRUNCATE_EXISTING )) {
 
             // write HFB Marker Header -- 4 bytes
-            writer.write( RawUtils.toByteArray4b( INT_HFB_MARKER ) );
+            writer.write( RawUtils.toByteArray4b( HFB_MARKER ) );
             // write HFB Version Information -- 4 bytes
-            writer.write( RawUtils.toByteArray4b( INT_V1_MARKER ) );
+            writer.write( RawUtils.toByteArray4b( HFB_V1_MARKER ) );
 
             // [option 2: is writing the chosen slice size ]
             // [option 2: this would be more future proof if allocation mechanism changes ]
