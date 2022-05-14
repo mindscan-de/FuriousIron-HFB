@@ -45,7 +45,7 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
     public HFBFilterBank readFromFile( String filePath ) {
         try (InputStream reader = Files.newInputStream( Paths.get( filePath ) )) {
 
-            byte[] hfb_header_buffer = reader.readNBytes( 8 );
+            byte[] hfb_header_buffer = reader.readNBytes( 24 );
 
             boolean isHFB = RawUtils.isMarker4b( hfb_header_buffer, 0, HFBFilterBankWriterV1Impl.INT_HFB_MARKER );
             boolean isV1 = RawUtils.isMarker4b( hfb_header_buffer, 4, HFBFilterBankWriterV1Impl.INT_V1_MARKER );
@@ -59,15 +59,12 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
             }
 
             HFBFilterBank filterBank = new HFBFilterBank();
+            int bitsInDocumentId = RawUtils.toUnsignedInt4b( hfb_header_buffer, 8 );
+            long occurrenceCount = RawUtils.toUnsignedLong8b( hfb_header_buffer, 12 );
+            int loadFactor = RawUtils.toUnsignedInt4b( hfb_header_buffer, 20 );
 
-//            // bits in documentId (4 bytes) 
-//            int bitsInDocumentId = 128;
-//
-//            // number of documents in filter (8 bytes)
-//            long occurenceCount = 10000L;
-//
-//            // loadfactor (4 bytes)
-//            int loadFactor = 5;
+            filterBank.initFilters( bitsInDocumentId, occurrenceCount, loadFactor );
+
 //
 //            int numberOfFilters = 3;
 //
