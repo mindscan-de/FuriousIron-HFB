@@ -33,7 +33,6 @@ import java.nio.file.StandardOpenOption;
 
 import de.mindscan.furiousiron.hfb.HFBFilterBank;
 import de.mindscan.furiousiron.hfb.HFBFilterBankWriter;
-import de.mindscan.furiousiron.hfb.HFBFilterData;
 
 /**
  * 
@@ -41,21 +40,29 @@ import de.mindscan.furiousiron.hfb.HFBFilterData;
 public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
 
     public final static String FILE_SUFFIX = "hfbv1";
+    public final static String FILE_DOT_SUFFIX = ".hfbv1";
 
     public final static byte[] HFB_MARKER = { 0x48, 0x46, 0x42, 0x2e };
-    public final static byte[] V1__MARKER = { 0x76, 0x31, 0x00, 0x00 };
+    public final static int INT_HFB_MARKER = 0x4846422e;
+
+    public final static byte[] V1_MARKER = { 0x76, 0x31, 0x00, 0x00 };
+    public final static int INT_V1_MARKER = 0x76310000;
 
     /** 
      * {@inheritDoc}
      */
     @Override
     public void write( HFBFilterBank filterBank, String outputPath ) {
+        if (!outputPath.endsWith( FILE_DOT_SUFFIX )) {
+            outputPath = outputPath + FILE_DOT_SUFFIX;
+        }
+
         try (OutputStream writer = Files.newOutputStream( Paths.get( outputPath ), StandardOpenOption.TRUNCATE_EXISTING )) {
 
             // write HFB Marker Header
             writer.write( HFB_MARKER );
             // write HFB Version Information
-            writer.write( V1__MARKER );
+            writer.write( V1_MARKER );
 
             writer.flush();
         }
@@ -72,24 +79,24 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
         // or just the slice size?
         // number of documents in filter is nice for later analysis of effectiveness.
 
-        int numberOfFilters = filterBank.getNumberOfFilters();
-
-        // for each filter save filter to output file
-        for (int i = 0; i < numberOfFilters; i++) {
-            // header for a filterdata
-
-            HFBFilterData filterData = filterBank.getFilterData( i );
-            // we want to write the number of bits
-            // we want to write the 
-            //current numberof filterbank
-
-            int slicePosition = filterData.getSlicePosition();
-            int sliceBitSize = filterData.getSliceBitSize();
-            byte[] sliceData = filterData.getSliceData();
-
-            // also add marker and length data.
-            // TODO write the index and the position, the sliced bits and the slicedata (also the number of bytes)
-        }
+//        int numberOfFilters = filterBank.getNumberOfFilters();
+//
+//        // for each filter save filter to output file
+//        for (int i = 0; i < numberOfFilters; i++) {
+//            // header for a filterdata
+//
+//            HFBFilterData filterData = filterBank.getFilterData( i );
+//            // we want to write the number of bits
+//            // we want to write the 
+//            //current numberof filterbank
+//
+//            int slicePosition = filterData.getSlicePosition();
+//            int sliceBitSize = filterData.getSliceBitSize();
+//            byte[] sliceData = filterData.getSliceData();
+//
+//            // also add marker and length data.
+//            // TODO write the index and the position, the sliced bits and the slicedata (also the number of bytes)
+//        }
 
     }
 
