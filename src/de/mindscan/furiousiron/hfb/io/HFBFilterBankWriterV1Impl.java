@@ -106,11 +106,8 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             e.printStackTrace();
         }
 
-//            // we want to write the number of bits
+//            // we want to write the number of bytes
 //            // we want to write the 
-//
-//            int slicePosition = filterData.getSlicePosition();
-//            int sliceBitSize = filterData.getSliceBitSize();
 //            byte[] sliceData = filterData.getSliceData();
 //
 //            // also add marker and length data.
