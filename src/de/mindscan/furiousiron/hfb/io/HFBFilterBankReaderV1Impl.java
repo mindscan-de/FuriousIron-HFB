@@ -32,6 +32,7 @@ import java.nio.file.Paths;
 
 import de.mindscan.furiousiron.hfb.HFBFilterBank;
 import de.mindscan.furiousiron.hfb.HFBFilterBankReader;
+import de.mindscan.furiousiron.hfb.HFBFilterData;
 
 /**
  * 
@@ -72,27 +73,29 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
             int numberOfFilters = RawUtils.toUnsignedInt4b( hfb_header_buffer, 24 );
 
             for (int filterID = 0; filterID < numberOfFilters; filterID++) {
-                byte[] filter_data_header_buffer = reader.readNBytes( 8 );
+                byte[] filter_data_header_buffer = reader.readNBytes( 16 );
 
                 if (!RawUtils.isMarker4b( filter_data_header_buffer, 0, HFB_FILTERDATA_MARKER )) {
                     throw new FileFormatException( "Filterdata is not at expected position." );
                 }
 
+                int slicePosition = RawUtils.toUnsignedInt4b( filter_data_header_buffer, 8 );
+                int sliceBitSize = RawUtils.toUnsignedInt4b( filter_data_header_buffer, 12 );
+
+                HFBFilterData hfbdata = new HFBFilterData( slicePosition, sliceBitSize );
+
+                // TODO: read filter data
+                // TODO: set filter data
+                // hfbdata.setSliceData( filterData );
+
+                filterBank.addFilterData( hfbdata );
+
             }
 
-//            // 
-//            for (int i = 0; i < numberOfFilters; i++) {
-//                // read current filterbank position
 //                // read current filterbank data
 //                // read more stuff.
-//                int current_filterbankIndex = 0;
 //
 //                HFBFilterData filterData = filterBank.getFilterData( current_filterbankIndex );
-//
-//                // verify with read data
-//
-//                filterData.setSliceData( new byte[0] );
-//            }
 
             return filterBank;
         }
