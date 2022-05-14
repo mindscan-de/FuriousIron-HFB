@@ -92,7 +92,9 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
                 writer.write( RawUtils.toByteArray4b( HFB_FILTERDATA_MARKER ) );
                 writer.write( RawUtils.toByteArray4b( filterID ) );
 
-                // TODO: write filterdata configuration
+                writer.write( RawUtils.toByteArray4b( filterData.getSlicePosition() ) );
+                writer.write( RawUtils.toByteArray4b( filterData.getSliceBitSize() ) );
+
                 // TODO: write length of filterdata in bytes
                 // TODO: write filterdata of current filterID 
             }
