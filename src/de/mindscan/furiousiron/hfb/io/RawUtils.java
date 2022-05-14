@@ -50,6 +50,21 @@ public class RawUtils {
         return result;
     }
 
+    public static byte[] toByteArray8b( long value ) {
+        byte[] result = new byte[4];
+
+        result[0] = (byte) ((value >> 56) & 0xff);
+        result[1] = (byte) ((value >> 48) & 0xff);
+        result[2] = (byte) ((value >> 40) & 0xff);
+        result[3] = (byte) ((value >> 32) & 0xff);
+        result[4] = (byte) ((value >> 24) & 0xff);
+        result[5] = (byte) ((value >> 16) & 0xff);
+        result[6] = (byte) ((value >> 8) & 0xff);
+        result[7] = (byte) ((value) & 0xff);
+
+        return result;
+    }
+
     static int toUnsignedInt2b( byte[] readNBytes, int offset ) {
         int b0 = (readNBytes[0 + offset]) & 0xff;
         int b1 = (readNBytes[1 + offset]) & 0xff;
