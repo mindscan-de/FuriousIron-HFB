@@ -38,6 +38,10 @@ import de.mindscan.furiousiron.hfb.HFBFilterBankReader;
  */
 public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
 
+    private static final int HFB_MARKER = HFBFilterBankWriterV1Impl.HFB_MARKER;
+    private static final int HFB_V1_MARKER = HFBFilterBankWriterV1Impl.HFB_V1_MARKER;
+    private static final int HFB_FILTERDATA_MARKER = HFBFilterBankWriterV1Impl.HFB_FILTERDATA_MARKER;
+
     /** 
      * {@inheritDoc}
      */
@@ -47,8 +51,8 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
 
             byte[] hfb_header_buffer = reader.readNBytes( 28 );
 
-            boolean isHFB = RawUtils.isMarker4b( hfb_header_buffer, 0, HFBFilterBankWriterV1Impl.HFB_MARKER );
-            boolean isV1 = RawUtils.isMarker4b( hfb_header_buffer, 4, HFBFilterBankWriterV1Impl.HFB_V1_MARKER );
+            boolean isHFB = RawUtils.isMarker4b( hfb_header_buffer, 0, HFB_MARKER );
+            boolean isV1 = RawUtils.isMarker4b( hfb_header_buffer, 4, HFB_V1_MARKER );
 
             if (!isHFB) {
                 throw new FileFormatException( "This is not a HFB-File." );
@@ -63,11 +67,16 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
             long occurrenceCount = RawUtils.toUnsignedLong8b( hfb_header_buffer, 12 );
             int loadFactor = RawUtils.toUnsignedInt4b( hfb_header_buffer, 20 );
 
-            filterBank.initFilters( bitsInDocumentId, occurrenceCount, loadFactor );
+            filterBank.initFiltersLazy( bitsInDocumentId, occurrenceCount, loadFactor );
 
             int numberOfFilters = RawUtils.toUnsignedInt4b( hfb_header_buffer, 24 );
 
             for (int filterID = 0; filterID < numberOfFilters; filterID++) {
+                byte[] filter_data_header_buffer = reader.readNBytes( 8 );
+
+                if (!RawUtils.isMarker4b( filter_data_header_buffer, 0, HFB_FILTERDATA_MARKER )) {
+                    throw new FileFormatException( "Filterdata is not at expected position." );
+                }
 
             }
 
