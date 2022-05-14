@@ -60,9 +60,7 @@ public class HFBFilterBank {
      * @param loadFactor set it to 5 (five)
      */
     public void initFilters( int bitsInDocumentId, long occurenceCount, int loadFactor ) {
-        this.bitsInDocumentId = bitsInDocumentId;
-        this.occurrenceCount = occurenceCount;
-        this.loadFactor = loadFactor;
+        initFiltersLazy( bitsInDocumentId, occurenceCount, loadFactor );
 
         long highestBitMasked = Long.highestOneBit( occurenceCount * loadFactor );
         int sliceSize = (int) Long.numberOfTrailingZeros( highestBitMasked );
@@ -71,8 +69,18 @@ public class HFBFilterBank {
             HFBFilterData hfbdata = new HFBFilterData( slicePosition, sliceSize );
             hfbdata.initFilter();
 
-            hfbfilters.add( hfbdata );
+            addFilterData( hfbdata );
         }
+    }
+
+    public void initFiltersLazy( int bitsInDocumentId, long occurenceCount, int loadFactor ) {
+        this.bitsInDocumentId = bitsInDocumentId;
+        this.occurrenceCount = occurenceCount;
+        this.loadFactor = loadFactor;
+    }
+
+    public void addFilterData( HFBFilterData hfbdata ) {
+        hfbfilters.add( hfbdata );
     }
 
     public int getNumberOfFilters() {
