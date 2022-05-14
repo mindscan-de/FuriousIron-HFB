@@ -36,7 +36,12 @@ import de.mindscan.furiousiron.hfb.HFBFilterBankWriter;
 import de.mindscan.furiousiron.hfb.HFBFilterData;
 
 /**
- * 
+ * 1st MVP: save full hfb-filter-bank with full filter data to disk
+ * 2nd MVP: save sparse hfb-filter-banks to disk (save only those 3 or 4 with the fewest set bits in the filterdata)
+ *          and adapt the filter bank to work on sparse filter data. sparse filter data is faster to load (lower IO)
+ *          and faster to filter, and randomizes the bit positions, so that different portions of documentid are 
+ *          matched, which will lead to a more consistent document drop-out rate. The randomized and more consistent
+ *          drop out, will then remove documents earlier from the candidate list, saving time via non spend cpu cycles  
  */
 public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
 
@@ -47,6 +52,8 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
     public final static int HFB_MARKER = 0x4846422e;
     // 'v1', 0x00, 0x00
     public final static int HFB_V1_MARKER = 0x76310000;
+    // 'HFBD'
+    public final static int HFB_FILTERDATA_MARKER = 0x48464244;
 
     /** 
      * {@inheritDoc}
@@ -80,9 +87,11 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             // currently we will save all of them.
             writer.write( RawUtils.toByteArray4b( filterBank.getNumberOfFilters() ) );
             for (int filterID = 0; filterID < filterBank.getNumberOfFilters(); filterID++) {
-                // TODO: write filterdataheader
-
                 HFBFilterData filterData = filterBank.getFilterData( filterID );
+
+                writer.write( RawUtils.toByteArray4b( HFB_FILTERDATA_MARKER ) );
+                writer.write( RawUtils.toByteArray4b( filterID ) );
+
                 // TODO: write filterdata configuration
                 // TODO: write length of filterdata in bytes
                 // TODO: write filterdata of current filterID 
@@ -97,7 +106,6 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
 
 //            // we want to write the number of bits
 //            // we want to write the 
-//            //current numberof filterbank
 //
 //            int slicePosition = filterData.getSlicePosition();
 //            int sliceBitSize = filterData.getSliceBitSize();
