@@ -65,7 +65,8 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             outputPath = outputPath + FILE_DOT_SUFFIX;
         }
 
-        try (OutputStream writer = Files.newOutputStream( Paths.get( outputPath ), StandardOpenOption.TRUNCATE_EXISTING )) {
+        try (OutputStream writer = Files.newOutputStream( Paths.get( outputPath ), StandardOpenOption.CREATE, StandardOpenOption.WRITE,
+                        StandardOpenOption.TRUNCATE_EXISTING )) {
 
             // write HFB Marker Header -- 4 bytes
             writer.write( RawUtils.toByteArray4b( HFB_MARKER ) );
@@ -108,9 +109,16 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
         writer.write( RawUtils.toByteArray4b( filterData.getSlicePosition() ) );
         writer.write( RawUtils.toByteArray4b( filterData.getSliceBitSize() ) );
 
+        System.out.println( filterData.getSliceBitSize() );
+        System.out.println( 1L << filterData.getSliceBitSize() );
+
         byte[] filterDataArray = filterData.getSliceData();
         writer.write( RawUtils.toByteArray4b( filterDataArray.length ) );
         writer.write( filterDataArray );
+
+        int bitweight = BitwiseCalculations.calculateBitWeight( filterDataArray );
+        int invbitweight = BitwiseCalculations.calculateInvBitWeight( filterDataArray );
+        System.out.println( String.format( "Filter #%d has %d bits set (1) and %d not set (0).", filterID, bitweight, invbitweight ) );
     }
 
 }
