@@ -32,6 +32,8 @@ import java.util.Arrays;
  */
 public class BitwiseCalculations {
 
+    // actually must be measured, whether byte or int is faster for the weight tables.
+
     // https://oeis.org/A000120 | 0x0 -- 0xf
     private final static int[] hexDigitWeights = { //
                     // 0, 1, 2, 3, 4, 5, 6, 7 8, 9, A, B, C, D, E, F
