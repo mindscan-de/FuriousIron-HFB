@@ -53,7 +53,7 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
     // 'v1', 0x00, 0x00
     public final static int HFB_V1_MARKER = 0x76310000;
     // 'FDv1' - Uncompressed filter data
-    public final static int HFB_FILTERDATA_MARKER = 0x46447631;
+    public final static int HFB_FILTERDATA_MARKER_UNCOMPRESSED = 0x46447631;
 
     /** 
      * {@inheritDoc}
@@ -89,7 +89,7 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             for (int filterID = 0; filterID < filterBank.getNumberOfFilters(); filterID++) {
                 HFBFilterData filterData = filterBank.getFilterData( filterID );
 
-                writer.write( RawUtils.toByteArray4b( HFB_FILTERDATA_MARKER ) );
+                writer.write( RawUtils.toByteArray4b( HFB_FILTERDATA_MARKER_UNCOMPRESSED ) );
                 writer.write( RawUtils.toByteArray4b( filterID ) );
 
                 writer.write( RawUtils.toByteArray4b( filterData.getSlicePosition() ) );

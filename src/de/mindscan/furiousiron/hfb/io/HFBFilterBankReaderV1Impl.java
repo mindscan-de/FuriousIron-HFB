@@ -41,7 +41,7 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
 
     private static final int HFB_MARKER = HFBFilterBankWriterV1Impl.HFB_MARKER;
     private static final int HFB_V1_MARKER = HFBFilterBankWriterV1Impl.HFB_V1_MARKER;
-    private static final int HFB_FILTERDATA_MARKER_UNCOMPRESSED = HFBFilterBankWriterV1Impl.HFB_FILTERDATA_MARKER;
+    private static final int HFB_FILTERDATA_MARKER_UNCOMPRESSED = HFBFilterBankWriterV1Impl.HFB_FILTERDATA_MARKER_UNCOMPRESSED;
 
     /** 
      * {@inheritDoc}
