@@ -175,7 +175,7 @@ public class HFBFilterDataTest {
     public void testSetIndex_SetIdx0_expectIdx0BeTrue() throws Exception {
         // arrange
         HFBFilterData data = new HFBFilterData( 0, 5 );
-        data.initFilter();
+        data.initEmpty();
 
         // act
         data.setIndex( 0 );
@@ -189,7 +189,7 @@ public class HFBFilterDataTest {
     public void testSetIndex_SetIdx1_expectIdx0BeFalse() throws Exception {
         // arrange
         HFBFilterData data = new HFBFilterData( 0, 5 );
-        data.initFilter();
+        data.initEmpty();
 
         // act
         data.setIndex( 1 );
@@ -203,7 +203,7 @@ public class HFBFilterDataTest {
     public void testSetIndex_SetIdx1_expectIdx1BeTrue() throws Exception {
         // arrange
         HFBFilterData data = new HFBFilterData( 0, 5 );
-        data.initFilter();
+        data.initEmpty();
 
         // act
         data.setIndex( 1 );
@@ -217,7 +217,7 @@ public class HFBFilterDataTest {
     public void testSetIndex_SetIdx31_expectIdx31BeTrue() throws Exception {
         // arrange
         HFBFilterData data = new HFBFilterData( 0, 5 );
-        data.initFilter();
+        data.initEmpty();
 
         // act
         data.setIndex( 31 );
@@ -231,7 +231,7 @@ public class HFBFilterDataTest {
     public void testClearIndex_SetIdx31ThenClear_expectIdx31BeFalse() throws Exception {
         // arrange
         HFBFilterData data = new HFBFilterData( 0, 5 );
-        data.initFilter();
+        data.initEmpty();
         data.setIndex( 31 );
 
         // act
@@ -246,7 +246,7 @@ public class HFBFilterDataTest {
     public void testSetIndex_SetIdx32WhenOnlyBitWideWindow_throwsAIOOBException() throws Exception {
         // arrange
         HFBFilterData data = new HFBFilterData( 0, 5 );
-        data.initFilter();
+        data.initEmpty();
 
         // act
         assertThrows( ArrayIndexOutOfBoundsException.class, () -> {

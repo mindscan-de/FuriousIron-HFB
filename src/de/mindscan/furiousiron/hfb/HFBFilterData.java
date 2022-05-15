@@ -74,8 +74,7 @@ public class HFBFilterData {
         // development and future improvements
     }
 
-    // TODO: only init after setting the correct SliceMaskSize
-    public void initFilter() {
+    public void initEmpty() {
         int numberOfBits = Math.max( this.sliceBitSize - 3, 0 );
         setSliceDataInternal( new byte[1 << numberOfBits] );
     }

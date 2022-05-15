@@ -67,7 +67,7 @@ public class HFBFilterBank {
 
         for (int slicePosition = bitsInDocumentId - sliceSize; slicePosition >= 0; slicePosition -= sliceSize) {
             HFBFilterData hfbdata = new HFBFilterData( slicePosition, sliceSize );
-            hfbdata.initFilter();
+            hfbdata.initEmpty();
 
             addFilterData( hfbdata );
         }
