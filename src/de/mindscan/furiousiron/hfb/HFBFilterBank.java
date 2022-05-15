@@ -27,6 +27,7 @@ package de.mindscan.furiousiron.hfb;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -61,7 +62,8 @@ public class HFBFilterBank {
     public void initFilters( int bitsInDocumentId, long occurenceCount, int loadFactor ) {
         initFiltersLazy( bitsInDocumentId, occurenceCount, loadFactor );
 
-        long highestBitMasked = Long.highestOneBit( occurenceCount * loadFactor );
+        // we must actually do one bitshift to the left
+        long highestBitMasked = Long.highestOneBit( occurenceCount * loadFactor ) << 1;
         int sliceSize = (int) Long.numberOfTrailingZeros( highestBitMasked );
 
         for (int slicePosition = bitsInDocumentId - sliceSize; slicePosition >= 0; slicePosition -= sliceSize) {
@@ -100,6 +102,18 @@ public class HFBFilterBank {
             // index by using a BigInteger
             BigInteger partId = documentId.shiftRight( filter.getSlicePosition() ).and( filter.getSliceBitMaskBI() );
             filter.setIndex( partId.intValueExact() );
+        }
+    }
+
+    public void addDocumentIds( Collection<BigInteger> documentIds ) {
+        for (HFBFilterData filter : hfbfilters) {
+            int slicePosition = filter.getSlicePosition();
+            BigInteger sliceBitMaskBI = filter.getSliceBitMaskBI();
+
+            for (BigInteger documentId : documentIds) {
+                BigInteger partId = documentId.shiftRight( slicePosition ).and( sliceBitMaskBI );
+                filter.setIndex( partId.intValueExact() );
+            }
         }
     }
 
