@@ -87,18 +87,7 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             // currently we will save all of them.
             writer.write( RawUtils.toByteArray4b( filterBank.getNumberOfFilters() ) );
             for (int filterID = 0; filterID < filterBank.getNumberOfFilters(); filterID++) {
-                HFBFilterData filterData = filterBank.getFilterData( filterID );
-
-                writer.write( RawUtils.toByteArray4b( HFB_FILTERDATA_MARKER_UNCOMPRESSED ) );
-                writer.write( RawUtils.toByteArray4b( filterID ) );
-
-                writer.write( RawUtils.toByteArray4b( filterData.getSlicePosition() ) );
-                writer.write( RawUtils.toByteArray4b( filterData.getSliceBitSize() ) );
-
-                byte[] filterDataArray = filterData.getSliceData();
-                writer.write( RawUtils.toByteArray4b( filterDataArray.length ) );
-                writer.write( filterDataArray );
-
+                writeFilterBankData( filterBank, writer, filterID );
             }
 
             writer.flush();
@@ -108,6 +97,20 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             e.printStackTrace();
         }
 
+    }
+
+    private void writeFilterBankData( HFBFilterBank filterBank, OutputStream writer, int filterID ) throws IOException {
+        HFBFilterData filterData = filterBank.getFilterData( filterID );
+
+        writer.write( RawUtils.toByteArray4b( HFB_FILTERDATA_MARKER_UNCOMPRESSED ) );
+        writer.write( RawUtils.toByteArray4b( filterID ) );
+
+        writer.write( RawUtils.toByteArray4b( filterData.getSlicePosition() ) );
+        writer.write( RawUtils.toByteArray4b( filterData.getSliceBitSize() ) );
+
+        byte[] filterDataArray = filterData.getSliceData();
+        writer.write( RawUtils.toByteArray4b( filterDataArray.length ) );
+        writer.write( filterDataArray );
     }
 
 }

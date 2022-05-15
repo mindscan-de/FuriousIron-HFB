@@ -71,7 +71,6 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
             filterBank.initFiltersLazy( bitsInDocumentId, occurrenceCount, loadFactor );
 
             int numberOfFilters = RawUtils.toUnsignedInt4b( hfb_header_buffer, 24 );
-
             for (int filterID = 0; filterID < numberOfFilters; filterID++) {
                 readFilterBankData( reader, filterBank );
             }
