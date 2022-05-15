@@ -51,7 +51,7 @@ public class RawUtils {
     }
 
     public static byte[] toByteArray8b( long value ) {
-        byte[] result = new byte[4];
+        byte[] result = new byte[8];
 
         result[0] = (byte) ((value >> 56) & 0xff);
         result[1] = (byte) ((value >> 48) & 0xff);
