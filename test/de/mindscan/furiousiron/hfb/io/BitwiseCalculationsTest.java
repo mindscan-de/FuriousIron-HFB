@@ -6,7 +6,7 @@ public class BitwiseCalculationsTest {
 
     @Test
     public void testGetByteWeights_calculateMatrix_expectCodeOuptut() throws Exception {
-        byte[] hexdigitweights = BitwiseCalculations.getHexDigitWeight();
+        int[] hexdigitweights = BitwiseCalculations.getHexDigitWeight();
 
         for (int j = 0; j < 16; j++) {
 
