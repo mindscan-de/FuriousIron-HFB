@@ -30,12 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A filterbank is a collection of multiple filters, they don't need to be
- * equally sized or so, but for the moment this is good enough.
+ * A filter bank is a collection of multiple filters, applied to a document id.
  * 
- * The cool thing about such a filterbank is, that it could already combine often
- * used search terms, instead of only trigrams. We can build a hash of these and 
- * cache this particular filterbank. 
+ * The cool thing about such a filter bank is, that it could already combine often
+ * used search terms, instead of only tri-grams. We can build a hash of these and 
+ * cache this particular filter bank. 
  * 
  * HFBFilter data can be combined using a binary AND-Operation if they have the 
  * same sliceSize and the same slicePosition.
@@ -103,11 +102,6 @@ public class HFBFilterBank {
             filter.setIndex( partId.intValueExact() );
         }
     }
-
-    // TODO: save filterbank
-    // TODO: load filterbank
-    // TODO: load reduced filterbank, will load the filterbank partially 
-    //       e.g. load only 3 out of 8 hfbfilters -> save io and compute
 
     public boolean containsDocumentId( BigInteger documentId ) {
         int i = 1;
