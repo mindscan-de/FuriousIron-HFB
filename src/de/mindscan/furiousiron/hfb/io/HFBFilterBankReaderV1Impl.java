@@ -85,9 +85,9 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
                 HFBFilterData hfbdata = new HFBFilterData( slicePosition, sliceBitSize );
 
                 int filterDataLength = RawUtils.toUnsignedInt4b( filter_data_header_buffer, 16 );
-                // TODO: read filter data
-                // TODO: set filter data
-                // hfbdata.setSliceData( filterDataArray );
+
+                byte[] filterDataArray = reader.readNBytes( filterDataLength );
+                hfbdata.setSliceData( filterDataArray );
 
                 filterBank.addFilterData( hfbdata );
 

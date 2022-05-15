@@ -97,8 +97,8 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
 
                 byte[] filterDataArray = filterData.getSliceData();
                 writer.write( RawUtils.toByteArray4b( filterDataArray.length ) );
+                writer.write( filterDataArray );
 
-                // TODO: write filterdata of current filterID 
             }
 
             writer.flush();
@@ -107,11 +107,6 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-//            // we want to write the arraydata  
-//            byte[] sliceData = filterData.getSliceData();
-//
-//            TODO write the index and the position, the sliced bits and the slicedata (also the number of bytes)
 
     }
 
