@@ -41,7 +41,7 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
 
     private static final int HFB_MARKER = HFBFilterBankWriterV1Impl.HFB_MARKER;
     private static final int HFB_V1_MARKER = HFBFilterBankWriterV1Impl.HFB_V1_MARKER;
-    private static final int HFB_FILTERDATA_MARKER = HFBFilterBankWriterV1Impl.HFB_FILTERDATA_MARKER;
+    private static final int HFB_FILTERDATA_MARKER_UNCOMPRESSED = HFBFilterBankWriterV1Impl.HFB_FILTERDATA_MARKER;
 
     /** 
      * {@inheritDoc}
@@ -73,30 +73,8 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
             int numberOfFilters = RawUtils.toUnsignedInt4b( hfb_header_buffer, 24 );
 
             for (int filterID = 0; filterID < numberOfFilters; filterID++) {
-                byte[] filter_data_header_buffer = reader.readNBytes( 20 );
-
-                if (!RawUtils.isMarker4b( filter_data_header_buffer, 0, HFB_FILTERDATA_MARKER )) {
-                    throw new FileFormatException( "Filterdata is not at expected position." );
-                }
-
-                int slicePosition = RawUtils.toUnsignedInt4b( filter_data_header_buffer, 8 );
-                int sliceBitSize = RawUtils.toUnsignedInt4b( filter_data_header_buffer, 12 );
-
-                HFBFilterData hfbdata = new HFBFilterData( slicePosition, sliceBitSize );
-
-                int filterDataLength = RawUtils.toUnsignedInt4b( filter_data_header_buffer, 16 );
-
-                byte[] filterDataArray = reader.readNBytes( filterDataLength );
-                hfbdata.setSliceData( filterDataArray );
-
-                filterBank.addFilterData( hfbdata );
-
+                readFilterBankData( reader, filterBank );
             }
-
-//                // read current filterbank data
-//                // read more stuff.
-//
-//                HFBFilterData filterData = filterBank.getFilterData( current_filterbankIndex );
 
             return filterBank;
         }
@@ -107,6 +85,26 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
 
         // TODO Auto-generated method stub
         return null;
+    }
+
+    private void readFilterBankData( InputStream reader, HFBFilterBank filterBank ) throws IOException {
+        byte[] filter_data_header_buffer = reader.readNBytes( 20 );
+
+        if (!RawUtils.isMarker4b( filter_data_header_buffer, 0, HFB_FILTERDATA_MARKER_UNCOMPRESSED )) {
+            throw new FileFormatException( "Can't decode filter bank data. Marker unknown." );
+        }
+
+        int slicePosition = RawUtils.toUnsignedInt4b( filter_data_header_buffer, 8 );
+        int sliceBitSize = RawUtils.toUnsignedInt4b( filter_data_header_buffer, 12 );
+
+        HFBFilterData hfbdata = new HFBFilterData( slicePosition, sliceBitSize );
+
+        int filterDataLength = RawUtils.toUnsignedInt4b( filter_data_header_buffer, 16 );
+
+        byte[] filterDataArray = reader.readNBytes( filterDataLength );
+        hfbdata.setSliceData( filterDataArray );
+
+        filterBank.addFilterData( hfbdata );
     }
 
 }
