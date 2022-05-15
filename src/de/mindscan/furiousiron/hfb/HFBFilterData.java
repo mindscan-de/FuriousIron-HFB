@@ -26,6 +26,7 @@
 package de.mindscan.furiousiron.hfb;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 
 /**
  * Save the filter data in a bitfield.
@@ -76,13 +77,15 @@ public class HFBFilterData {
     // TODO: only init after setting the correct SliceMaskSize
     public void initFilter() {
         int numberOfBits = Math.max( this.sliceBitSize - 3, 0 );
-        setSliceData( new byte[1 << numberOfBits] );
+        setSliceDataInternal( new byte[1 << numberOfBits] );
     }
 
-    // TODO: write to the byte buffer and mark document occurrences
-    // TODO: check the buffer, whether it contains a value 
-
     public void setSliceData( byte[] filterData ) {
+        int numberOfBits = Math.max( this.sliceBitSize - 3, 0 );
+        this.sliceData = Arrays.copyOf( filterData, 1 << numberOfBits );
+    }
+
+    private void setSliceDataInternal( byte[] filterData ) {
         this.sliceData = filterData;
     }
 
