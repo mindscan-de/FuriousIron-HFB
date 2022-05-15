@@ -73,7 +73,7 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
             int numberOfFilters = RawUtils.toUnsignedInt4b( hfb_header_buffer, 24 );
 
             for (int filterID = 0; filterID < numberOfFilters; filterID++) {
-                byte[] filter_data_header_buffer = reader.readNBytes( 16 );
+                byte[] filter_data_header_buffer = reader.readNBytes( 20 );
 
                 if (!RawUtils.isMarker4b( filter_data_header_buffer, 0, HFB_FILTERDATA_MARKER )) {
                     throw new FileFormatException( "Filterdata is not at expected position." );
@@ -84,9 +84,10 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
 
                 HFBFilterData hfbdata = new HFBFilterData( slicePosition, sliceBitSize );
 
+                int filterDataLength = RawUtils.toUnsignedInt4b( filter_data_header_buffer, 16 );
                 // TODO: read filter data
                 // TODO: set filter data
-                // hfbdata.setSliceData( filterData );
+                // hfbdata.setSliceData( filterDataArray );
 
                 filterBank.addFilterData( hfbdata );
 

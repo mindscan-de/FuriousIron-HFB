@@ -52,7 +52,7 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
     public final static int HFB_MARKER = 0x4846422e;
     // 'v1', 0x00, 0x00
     public final static int HFB_V1_MARKER = 0x76310000;
-    // 'FDv1'
+    // 'FDv1' - Uncompressed filter data
     public final static int HFB_FILTERDATA_MARKER = 0x46447631;
 
     /** 
@@ -95,7 +95,9 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
                 writer.write( RawUtils.toByteArray4b( filterData.getSlicePosition() ) );
                 writer.write( RawUtils.toByteArray4b( filterData.getSliceBitSize() ) );
 
-                // TODO: write length of filterdata in bytes
+                byte[] filterDataArray = filterData.getSliceData();
+                writer.write( RawUtils.toByteArray4b( filterDataArray.length ) );
+
                 // TODO: write filterdata of current filterID 
             }
 
@@ -106,12 +108,10 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             e.printStackTrace();
         }
 
-//            // we want to write the number of bytes
-//            // we want to write the 
+//            // we want to write the arraydata  
 //            byte[] sliceData = filterData.getSliceData();
 //
-//            // also add marker and length data.
-//            // TODO write the index and the position, the sliced bits and the slicedata (also the number of bytes)
+//            TODO write the index and the position, the sliced bits and the slicedata (also the number of bytes)
 
     }
 
