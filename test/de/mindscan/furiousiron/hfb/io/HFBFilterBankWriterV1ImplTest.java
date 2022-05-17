@@ -41,7 +41,7 @@ public class HFBFilterBankWriterV1ImplTest {
 
         Random random = new Random( seed );
 
-        for (int i = 0; i < 13332; i++) {
+        for (int i = 0; i < count; i++) {
             byte[] target = new byte[16];
             random.nextBytes( target );
             result.add( new BigInteger( target ) );
