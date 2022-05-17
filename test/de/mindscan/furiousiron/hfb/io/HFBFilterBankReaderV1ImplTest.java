@@ -35,21 +35,21 @@ public class HFBFilterBankReaderV1ImplTest {
     }
 
     @Test
-    public void testReadFromFile_OneMoreDocumentBtNotIncludedDocument_documentIdReportedMissing() throws Exception {
+    public void testReadFromFile_OneMoreDocumentButNotIncludedDocument_documentIdReportedMissing() throws Exception {
         int number_of_documents = 13332;
 
         // arrange
         HFBFilterBankReader reader = new HFBFilterBankReaderV1Impl();
         Set<BigInteger> documentCollection = getDocumentIdCollection( 0xbadface1, number_of_documents );
-        Set<BigInteger> documentCollectionOneMore = getDocumentIdCollection( 0xbadface1, number_of_documents + 1 );
+        Set<BigInteger> documentCollectionAndOneMore = getDocumentIdCollection( 0xbadface1, number_of_documents + 1 );
 
-        documentCollectionOneMore.removeAll( documentCollection );
+        documentCollectionAndOneMore.removeAll( documentCollection );
 
         // act
         HFBFilterBank filterbank = reader.readFromFile( "D:\\myfirstFilterbank.hfbv1" );
 
-        // assert all 13332 elements are listed in the filterbank
-        for (BigInteger documentId : documentCollectionOneMore) {
+        // Test that the single extra document is reported as non existent.
+        for (BigInteger documentId : documentCollectionAndOneMore) {
             boolean isContained = filterbank.containsDocumentId( documentId );
             assertThat( isContained, equalTo( false ) );
         }
