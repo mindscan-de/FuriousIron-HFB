@@ -23,9 +23,20 @@ effort is the memory lookup to decide, whether a candidate can be dropped or not
 
 ## Document IDs
 
-In this proof-of-concept we are looking whether a certain document ID is contained in a set of 
-documentIDs using a HFB-FilterBank. The important point is, that the documentID is a result
-of a collision resistant hash function (CRHF). The document ID of this hash function can either 
-be obtained by hashing the content or by hashing the origin of this document. The hash value
-can now be used to address a particular document or the content of a particular document.
+In a proof-of-concept we are looking whether a certain document ID is contained in a set of 
+documentIDs using a HFB-FilterBank. The important point is, that the document ID is a result
+of a collision resistant hash function (CRHF). The document ID of this hash function can be
+obtained by hashing the content or by hashing the origin of this document for example. The
+hash value can now be used to address a particular document or the content of a particular
+document.
 
+## Bloom-Filters
+
+A bloom filter hashes a given value and uses its hash value to look up in some kind of 
+array whether this memory location contains either a zero or a non-zero value. A zero
+value indicates that such a value was not hashed. A non-zero value indicates that either
+the searched value was hashed or a different value created a collision. Therefore a
+non-zero value means that the searched value was maybe part of the document. If we repeat
+this question with different hash functions for the same value and then do these lookups,
+the risk of a false positive, reduces with each different calculated hash value.
+ 
