@@ -39,4 +39,31 @@ the searched value was hashed or a different value created a collision. Therefor
 non-zero value means that the searched value was maybe part of the document. If we repeat
 this question with different hash functions for the same value and then do these lookups,
 the risk of a false positive, reduces with each different calculated hash value.
- 
+
+## Hash Free Bloom Filters
+
+Bloom filters need a hash function to work properly. But does it make any sense to make new
+hash calculations for the result of a hash function. In case of MD5, as a CRHF we get 128-bit
+output from the hash function. So instead of using a new hash function which again garbles
+the full 128 bit in a computationally expensive function, we can decide that we can extract
+hash values of any size from the already computed 128-bit hash result. We can do that by
+a right-shift-operation and an and-operation. Therefore we can parameterize the new hash
+function with basically two parameters, the number of bits to shift to the right and the 
+number of bits to keep with an and operation (e.g. 10 bits to keep -- an and operation with 0x3ff)
+
+This gives us a computationally very efficient hash function, which is indistinguishable from
+a normal memory operation, where we ensure that the memory we access can exceed a defined
+size. We also can extract multiple independent hash values, one size 10 with shift zero,
+or one with a size of 22 bit a bit shift by 44. The hash vales do not correlate, since their
+input hash value is computed and created once using a CRHF. Therefore "computing" different
+hash values doesn't require to invent different hash functions, we just go for a different
+combination of bits to right shift and hash function output size.
+
+So lets say we need 10 different hash values of 12 bit output length, we can shift by
+0,12,24,36,48,60,72,84,96,108 and and with 0xfff to get 10 different easy to calculate
+hash values. Or we shift by 1,13,25,...,109 and so on. 
+
+With that particular calculated output hash value we can directly access any array, and do 
+the readout whether this document id is still a candidate worth inspecting or is eliminated 
+by the Bloom-Filter. The catch is, that we can directly operate on the document id for this 
+bloom filter, without spending additional compute for another hash function.
