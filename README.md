@@ -77,3 +77,27 @@ output size of 16 bit, will yield a nearly 80% reject rate. For the application 
 filter so the memory consumption and the computational effort can still be adjusted. For
 my cases i usually want a 80% rejection rate for a filter configuration, but only execute
 three of these filters.
+
+## Filter Effectiveness Consideration leads to better Performance
+
+After inserting the documents each particular filter banks effectiveness can be calculated,
+by the number of non-zero positions in the filter bank data. By saving these with the lowest
+weight first we can choose to use the best filters first (saving those with the highest dropout
+rate first), that effectively is leading to a randomization in using the filters and a better
+performance to dropout-rate for the candidate document IDs.
+
+Since the most effective filters for a particular document set are used first, the number of
+false positives in the application of the first filter is lowest, then we use the hash function
+which lead to a filter with the second lowest number of non-zero values, produces again the 
+second lowest number of false positives and so on. the first applied filter might be the one 
+with a bit shift of 84 and the second one with a bit shift by 24 and the third one with a bit
+shift by 108. This kind of natural randomization is useful, to not test the same bits over and
+over again. That will avoid to spend compute on document ids with filters with low quality 
+(those with a low rejection) rate.
+
+And because you know the false positive rate, you don't need to execute all filter banks, but
+the most effective ones first until you reach a false positive rate of maybe 0.1%. Then you 
+can stop saving that filter data to disk (saving then I/O and storage) for the HFB-Filters.
+
+You can optimize storage size vs. filter efficiency. by using e.g. one bit less for the
+output hash function, but spending compute one extra filter.
