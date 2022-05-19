@@ -67,3 +67,13 @@ With that particular calculated output hash value we can directly access any arr
 the readout whether this document id is still a candidate worth inspecting or is eliminated 
 by the Bloom-Filter. The catch is, that we can directly operate on the document id for this 
 bloom filter, without spending additional compute for another hash function.
+
+## Different Hash Sizes to Control reject rate
+
+Each Set of documents stored in a HFB-Filter can provide its own "parameterizable" hash 
+function. If the number of inserted document ids into the HFB-Filter is 12000. Then you 
+can choose either to use 10 bits, which will yield in a low rejection rate, whereas an 
+output size of 16 bit, will yield a nearly 80% reject rate. For the application of one 
+filter so the memory consumption and the computational effort can still be adjusted. For
+my cases i usually want a 80% rejection rate for a filter configuration, but only execute
+three of these filters.
