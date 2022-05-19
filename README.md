@@ -51,6 +51,8 @@ a right-shift-operation and an and-operation. Therefore we can parameterize the 
 function with basically two parameters, the number of bits to shift to the right and the 
 number of bits to keep with an and operation (e.g. 10 bits to keep -- an and operation with 0x3ff)
 
+Instead of a hash value calculation we simply extract hash values from a larger hash value.
+
 This gives us a computationally very efficient hash function, which is indistinguishable from
 a normal memory operation, where we ensure that the memory we access can exceed a defined
 size. We also can extract multiple independent hash values, one size 10 with shift zero,
