@@ -101,3 +101,16 @@ can stop saving that filter data to disk (saving then I/O and storage) for the H
 
 You can optimize storage size vs. filter efficiency. by using e.g. one bit less for the
 output hash function, but spending compute one extra filter.
+
+## Golomb coding for HFB-FilterData
+
+Golomb Coding produces low overhead even if hash size increase, then the distance between two
+consecutive non zero values just increases, leading to a different value of "m". So the storage
+on disk doesn't change significantly because of the more sparse array of non-zero values. Because
+a fixed number of document IDs is inserted into the filter bank, the number of bits in an array 
+has an upper bound by the number of inserted values, making the number of zero runs just more 
+likely, which can be accommodated by the Golomb coding parameters. Leading to a small increase
+compressed filter data size.
+
+That means that more sparse arrays may need more temporary memory requirements when testing, but
+doesn't need much more permanent storage requirements on disk.
