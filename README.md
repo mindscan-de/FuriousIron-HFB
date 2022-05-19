@@ -149,8 +149,8 @@ the hash function with something very very simple.
 This is basically the most computationally effective / fastest hash function for a bloom filter. 
 
 * ``document_id`` - result of a CRHF (collision resistant hash function, e.g. 128 bit (MD5) or longer)
-* ``slice_position`` - bit position where the hash is extracted from the document id
-* ``slice_mask`` - the lowest n bits depending on output size, number of document IDs, sparsity or desired dropout-rate are set, all other are set to zero
+* ``slice_position`` - bit position where the hash is extracted from the ``document_id``
+* ``slice_mask`` - the lowest n bits depending on output size, number of document IDs, sparsity or desired drop-out-rate are set, all other are set to zero
 
 Hash calculation / Hash extraction
 
