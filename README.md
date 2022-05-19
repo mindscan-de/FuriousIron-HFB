@@ -167,5 +167,5 @@ Perform Test:
 This is basically a bloom filter implementation done in two lines of code. Which is basically 
 indistinguishable from a bounded memory access. The idea is to basically skip the hashing of
 an already CRHF generated hash value and replacing it by hash value extraction. In case you 
-want to test a list of hashed document origin IDs against a set of a set of hashed document 
+want to test a list of hashed document origin IDs against a set of hashed document 
 origin IDs.
