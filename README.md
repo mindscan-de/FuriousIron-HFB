@@ -114,4 +114,34 @@ compressed filter data size.
 
 That means that more sparse arrays may need more temporary memory requirements when testing, but
 they don't need much more permanent storage on disk. More sparse arrays lead to higher per filter
-bank dropout. But are used only for a short time in memory.
+bank dropout. But are used only for a short time in memory. Once the filter is applied to a list
+of document IDs or hashed keys, its filter banks job is done.
+
+## Privacy preserving aspect
+
+If only 3 out of all filter banks are saved to disk, the document ids from the set can not be 
+extracted from the filter data effectively. Because the filter saved the data with the highest
+number of collisions first. And if only 45 bits out of 128 are saved to disk, the missing bits
+can not be reconstructed.
+
+## TLDR
+
+This is basically the most computationally effective hash function for a bloom filter. 
+
+document_id - result of a CRHF (collision resistant hash function, e.g. 128 bit (MD5) or longer)
+slice_position - bit position where the hash is extracted from the document id
+slice_mask - the lowest n bits depending on (output size, number of document IDs, sparsity, dropout-rate) are set, all other are zero.
+
+Hash calculation 
+
+    extracted_hash = (document_id >> slice_position) & slice_mask
+
+Perform Test: 
+
+    hfbfilterdata[extracted_hash]!=0
+
+This is basically a bloom filter implementation done in two lines of code. Which is basically 
+indistinguishable from a bounded memory access. The idea is to basically skip the hashing of
+an already CRHF generated hash value and replacing it by hash value extraction. In case you 
+want to test a list of hashed document origins against a set of a list of hashed document 
+origins.
