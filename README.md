@@ -132,7 +132,7 @@ document_id - result of a CRHF (collision resistant hash function, e.g. 128 bit 
 slice_position - bit position where the hash is extracted from the document id
 slice_mask - the lowest n bits depending on (output size, number of document IDs, sparsity, dropout-rate) are set, all other are zero.
 
-Hash calculation 
+Hash calculation / Hash extraction
 
     extracted_hash = (document_id >> slice_position) & slice_mask
 
