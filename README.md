@@ -67,7 +67,7 @@ number of bits to keep with an and operation (e.g. 10 bits to keep -- an and ope
 Instead of a hash value calculation we simply extract hash values from a larger hash value.
 
 This gives us a computationally very efficient hash function, which is indistinguishable from
-a normal memory operation, where we ensure that the memory we access can exceed a defined
+a normal memory operation, where we ensure that the memory we access can't exceed a defined
 size. We also can extract multiple independent hash values, one size 10 with shift zero,
 or one with a size of 22 bit a bit shift by 44. The hash vales do not correlate, since their
 input hash value is computed and created once using a CRHF. Therefore "computing" different
