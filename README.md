@@ -113,4 +113,5 @@ likely, which can be accommodated by the Golomb coding parameters. Leading to a 
 compressed filter data size.
 
 That means that more sparse arrays may need more temporary memory requirements when testing, but
-doesn't need much more permanent storage requirements on disk.
+they don't need much more permanent storage on disk. More sparse arrays lead to higher per filter
+bank dropout. But are used only for a short time in memory.
