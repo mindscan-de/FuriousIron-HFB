@@ -119,18 +119,18 @@ output hash function, but spending compute one extra filter.
 
 ## Golomb coding for HFB-FilterData
 
-Golomb Coding produces low overhead even if hash size increase, then the distance between two
-consecutive non zero values just increases, leading to a different value of "m". So the storage
+Golomb Coding produces low overhead even if outout hash size increases, then just the distance between 
+two consecutive non zero values just increases, leading to a different value of "m". So the storage
 on disk doesn't change significantly because of the more sparse array of non-zero values. Because
 a fixed number of document IDs is inserted into the filter bank, the number of bits in an array 
 has an upper bound by the number of inserted values, making the number of zero runs just more 
-likely, which can be accommodated by the Golomb coding parameters. Leading to a small increase
+likely, which can be accommodated by the Golomb coding parameters. Leading to a small increase in
 compressed filter data size.
 
-That means that more sparse arrays may need more temporary memory requirements when testing, but
+That means that more sparse arrays will need more temporary memory requirements when testing, but
 they don't need much more permanent storage on disk. More sparse arrays lead to higher per filter
-bank dropout. But are used only for a short time in memory. Once the filter is applied to a list
-of document IDs or hashed keys, its filter banks job is done.
+bank drop-out. But only stay for a short time in memory. Once the filter is applied to a list of 
+document IDs or hashed keys, its filter banks job is done.
 
 ## Privacy preserving aspect
 
