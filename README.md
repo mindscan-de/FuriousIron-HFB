@@ -2,7 +2,7 @@
 
 HFB Implementation - Proof of Concept
 
-This is a proof of concept code for a hash-function free bloom filter, which i use for my 
+This is a proof of concept code for a hash-function free bloom filter, which I use for my 
 own developed source code search engine. It took me some iterations to simplify the concept
 of a bloom filter that much, that there is now basically no algorithm left. Calling this
 Hash-Free-Bloom-Filter an algorithm would overstate the two lines of implementing code
@@ -146,22 +146,26 @@ the hash function with something very very simple.
 
 ## TLDR
 
-This is basically the most computationally effective hash function for a bloom filter. 
+This is basically the most computationally effective / fastest hash function for a bloom filter. 
 
-document_id - result of a CRHF (collision resistant hash function, e.g. 128 bit (MD5) or longer)
-slice_position - bit position where the hash is extracted from the document id
-slice_mask - the lowest n bits depending on (output size, number of document IDs, sparsity, dropout-rate) are set, all other are zero.
+``document_id`` - result of a CRHF (collision resistant hash function, e.g. 128 bit (MD5) or longer)
+``slice_position`` - bit position where the hash is extracted from the document id
+``slice_mask`` - the lowest n bits depending on output size, number of document IDs, sparsity or desired dropout-rate are set, all other are set to zero
 
 Hash calculation / Hash extraction
 
-    extracted_hash = (document_id >> slice_position) & slice_mask
+    extracted_hash_value = ( document_id >> slice_position ) & slice_mask
+    
+Insert DocumentId
+
+    hfbfilterdata [ extracted_hash_value ] = 1
 
 Perform Test: 
 
-    hfbfilterdata[extracted_hash]!=0
+    hfbfilterdata [ extracted_hash_value ] != 0
 
 This is basically a bloom filter implementation done in two lines of code. Which is basically 
 indistinguishable from a bounded memory access. The idea is to basically skip the hashing of
 an already CRHF generated hash value and replacing it by hash value extraction. In case you 
-want to test a list of hashed document origins against a set of a list of hashed document 
-origins.
+want to test a list of hashed document origin IDs against a set of a set of hashed document 
+origin IDs.
