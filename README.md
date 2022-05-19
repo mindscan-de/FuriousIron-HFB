@@ -2,6 +2,19 @@
 
 HFB Implementation - Proof of Concept
 
+This is a proof of concept code for a hash-function free bloom filter, which i use for my 
+own developed source code search engine. It took me some iterations to simplify the concept
+of a bloom filter this much, that it now is basically no algorithm left. Calling this
+hash-free-bloom filter an algorithm would overstate the two lines of implementing code
+but simplifying a Bloom-filters down to basically two lines of code is nonetheless art.
+
+If you like this approach or cite it please link back to this repository and cite this 
+project URL.
+
+Maybe I should write a paper on it...
+
+Please enjoy:
+
 ## Hash-Free-Bloom  (HFB)
 
 HFB stands for Hash-Free-Bloom I'm not sure whether someone already did something similar or
