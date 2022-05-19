@@ -4,9 +4,9 @@ HFB Implementation - Proof of Concept
 
 This is a proof of concept code for a hash-function free bloom filter, which i use for my 
 own developed source code search engine. It took me some iterations to simplify the concept
-of a bloom filter this much, that it now is basically no algorithm left. Calling this
-hash-free-bloom filter an algorithm would overstate the two lines of implementing code
-but simplifying a Bloom-filters down to basically two lines of code is nonetheless art.
+of a bloom filter that much, that there is now basically no algorithm left. Calling this
+Hash-Free-Bloom-Filter an algorithm would overstate the two lines of implementing code
+but simplifying Bloom-Filters down to basically two lines of code is nonetheless art.
 
 If you like this approach or cite it please link back to this repository and cite this 
 project URL.
@@ -24,15 +24,15 @@ up with, to implement a test for "doesn't contain".
 I looked for an efficient way to effectively test whether a document contains a certain search 
 term or not.
 
-Bloom filters answer the question whether a value is not included. But can't answer a sure
+Bloom-Filters answer the question whether a value is not included. But can't answer a sure
 yes. Each yes is either a sure yes or a false positive. But a no is always a no. Anyhow when 
 implementing a search engine, the scenario basically is to drop potential documents which do 
 not contain one or more search terms, which we are specifically looking for.
 
-This Hash-Free-Bloom Filter comes with a kind of clever hash function, which allows the hash
+This Hash-Free-Bloom-Filter comes with a kind of clever hash function, which allows the hash
 to be computed that effectively that it is basically indistinguishable from a memory lookup. 
 Making this a practically hash function free Bloom-Filter. The only remaining computational
-effort is the memory lookup to decide, whether a candidate can be dropped or not.
+effort is a memory lookup to decide, whether a candidate can be dropped or not.
 
 ## Document IDs
 
@@ -138,6 +138,11 @@ If only 3 out of all filter banks are saved to disk, the document ids from the s
 extracted from the filter data effectively. Because the filter saved the data with the highest
 number of collisions first. And if only 45 bits out of 128 are saved to disk, the missing bits
 can not be reconstructed.
+
+## Combine HFB-Filters with other Bloom-Filter solutions
+
+All the other modifications, like counting Bloom-Filters are still possible - I just replaced
+the hash function with something very very simple. 
 
 ## TLDR
 
