@@ -30,7 +30,9 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * 
+ * The HFBFilterBankCompiler creates a HFBFilterBank from Collections. These compiled
+ * filter banks are meant to be saved somewhere, where they can then again be easily
+ * applied, without compiling them once more. 
  */
 public class HFBFilterBankCompiler {
 
