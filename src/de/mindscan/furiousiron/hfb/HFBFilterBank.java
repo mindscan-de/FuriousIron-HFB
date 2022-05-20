@@ -119,12 +119,14 @@ public class HFBFilterBank {
 
     public boolean containsDocumentId( BigInteger documentId ) {
         int i = 1;
-        for (HFBFilterData filter : hfbfilters) {
-            BigInteger partId = documentId.shiftRight( filter.getSlicePosition() ).and( filter.getSliceBitMaskBI() );
+        for (HFBFilterData bankData : hfbfilters) {
+            BigInteger extractedHashValue = documentId.shiftRight( bankData.getSlicePosition() ).and( bankData.getSliceBitMaskBI() );
 
-            if (!filter.isIndexSet( partId.intValueExact() )) {
+            if (!bankData.isIndexSet( extractedHashValue.intValueExact() )) {
                 return false;
             }
+
+            // Idea why to limit number of tests, even if more filter bank data is available
 
             // now the trick, is how many of these filters we do want to apply?
             // count the number of applied filters and return true, if we passed 3 max. 4 filters?
@@ -133,6 +135,8 @@ public class HFBFilterBank {
             // * of 0,16 percent when 4 hfb filters are asked = 4 times O(1) lookup
             // if we use a smaller sparsity we have to increase the number of filters
 
+            // TODO check will be removed in future, always full filter will be applied
+            //      but filter can be saved sparsely on disk.
             if (i >= 3) {
                 return true;
             }
