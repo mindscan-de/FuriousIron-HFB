@@ -26,6 +26,7 @@
 package de.mindscan.furiousiron.hfb;
 
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -40,7 +41,7 @@ public class HFBFilterBankCompiler {
      * @param documentIds we assume that documentIds are encoded as hexadecimal values (as of now)
      * @return a fully initialized filter, containing all given document ids
      */
-    public HFBFilterBank compileFilter( Set<String> documentIds ) {
+    public HFBFilterBank compileFilterHex( Collection<String> documentIds ) {
         HFBFilterBank compiledFilterBank = new HFBFilterBank();
 
         // we assume 128 bit long document ids, and a minimum of 32 
@@ -76,17 +77,30 @@ public class HFBFilterBankCompiler {
     }
 
     /**
+     * Inserts a collection of document ids given as hexadecimal number. 
      * 
-     * @param filter the filter where we want to add a bunch of documentIds
+     * @param filter the filter where we want to add a collection of documentIds
      * @param documentIds  we assume that documentIds are encoded as hexadecimal values (as of now)
-     * @return
+     * @return filter is returned
      */
-    public HFBFilterBank insertDocumentIds( HFBFilterBank filter, Set<String> documentIds ) {
+    public HFBFilterBank insertDocumentIdsHex( HFBFilterBank filter, Collection<String> documentIds ) {
         for (String documentIdStr : documentIds) {
             BigInteger documentId = new BigInteger( documentIdStr, 16 );
             filter.addDocumentId( documentId );
         }
 
+        return filter;
+    }
+
+    /**
+     * Inserts a collection of document ids given as biginteger values.
+     * 
+     * @param filter the filter where we want to add a bunch of documentIds
+     * @param documentIds the document ids are provided as a collection of bigintegers
+     * @return filter is returned
+     */
+    public HFBFilterBank insertDocumentIdsBI( HFBFilterBank filter, Collection<BigInteger> documentIds ) {
+        filter.addDocumentIds( documentIds );
         return filter;
     }
 
