@@ -34,11 +34,11 @@ import java.util.Set;
 public class HFBFilterBankCompiler {
 
     /**
-     * Will create a filterbank from a set of given documentIds. You should not
-     * add any more documentIds to this filter
+     * Will create a filter bank from a set of given documentIds. You should not
+     * add any more documentIds to this filter, to keep efficiency.
      * 
-     * @param documentIds
-     * @return
+     * @param documentIds we assume that documentIds are encoded as hexadecimal values (as of now)
+     * @return a fully initialized filter, containing all given document ids
      */
     public HFBFilterBank compileFilter( Set<String> documentIds ) {
         HFBFilterBank compiledFilterBank = new HFBFilterBank();
@@ -61,11 +61,10 @@ public class HFBFilterBankCompiler {
      * use {@link #insertDocumentIds(HFBFilterBank, Set)} to add documentIds 
      * to the filter. 
      * 
-     * @param documentIds
      * @param numberOfDocuments number of document ids to be inserted into the hfb filter 
-     * @return
+     * @return an empty initialized filter, containing no document ids.
      */
-    public HFBFilterBank compileFilter( long numberOfDocuments ) {
+    public HFBFilterBank createEmptyFilter( long numberOfDocuments ) {
         HFBFilterBank compiledFilterBank = new HFBFilterBank();
 
         // we assume 128 bit long document ids, and a minimum of 32 
@@ -76,6 +75,12 @@ public class HFBFilterBankCompiler {
         return compiledFilterBank;
     }
 
+    /**
+     * 
+     * @param filter the filter where we want to add a bunch of documentIds
+     * @param documentIds  we assume that documentIds are encoded as hexadecimal values (as of now)
+     * @return
+     */
     public HFBFilterBank insertDocumentIds( HFBFilterBank filter, Set<String> documentIds ) {
         for (String documentIdStr : documentIds) {
             BigInteger documentId = new BigInteger( documentIdStr, 16 );
