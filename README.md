@@ -2,11 +2,11 @@
 
 HFB Implementation - Proof of Concept
 
-This is a proof of concept code for a hash-function free bloom filter, which I use for my 
+This is a proof of concept code for a hash-function free Bloom-filter, which I use for my 
 personally developed source code search engine. It took me some iterations to simplify the
-concept of a bloom filter that much, that there is now basically no algorithm left. Calling
+concept of a Bloom-filter that much, that there is now basically no algorithm left. Calling
 this Hash-Free-Bloom-Filter an algorithm would overstate the two lines of implementing code
-but simplifying Bloom-Filters down to basically two lines of code is nonetheless art.
+but simplifying Bloom-filters down to basically two lines of code is nonetheless art.
 
 If you like this approach or cite it please link back to this repository and cite this 
 project URL.
@@ -31,7 +31,7 @@ to be computed that effectively that it is basically indistinguishable from a me
 Making this a practically hash function free Bloom-Filter. The only remaining computational
 effort is a memory lookup to decide, whether a candidate can be dropped or not.
 
-Hash-Free-Bloom Filters work only in a special circumstance, which I want to outline next. 
+Hash-Free-Bloom-Filters work only in a special circumstance, which I want to outline next. 
 
 ## Preconditions
 
@@ -65,17 +65,23 @@ address/identify a particular document or the content of a particular document.
 
 ## Bloom-Filters
 
-A bloom filter hashes a given value and uses its hash value to look up in some kind of 
-array whether this memory location contains either a zero or a non-zero value. A zero
-value indicates that such a value was not hashed. A non-zero value indicates that either
-the searched value was hashed or a different value created a collision. Therefore a
-non-zero value means that the searched value was maybe part of the document. If we repeat
-this question with different hash functions for the same value and then do these lookups,
-the risk of a false positive, reduces with each different calculated hash value.
+A Bloom-filter hashes a given value and uses this hash value to look up in some kind
+of array whether this memory location contains either a zero or a non-zero value.
+ 
+A zero value indicates that such a hash value was never hashed during the insertion stage of
+the Bloom-filter. A non-zero value indicates that, either the hash value was hashed during
+the insertion phase, or a different value created a collision resulting in the same hash.
+ 
+Therefore a non-zero value means that the searched value was maybe part of the data set
+inserted into the Bloom-filter.
+ 
+When we repeat this question with different hash functions for the same value and 
+then repeat the lookup in a different array, the risk of a false positive, reduces
+with each different calculated hash value.
 
-## Hash Free Bloom Filters
+## Hash Free Bloom-Filters
 
-Bloom filters need a hash function to work properly. But does it make any sense to make new
+Bloom-filters need a hash function to work properly. But does it make any sense to make new
 hash calculations for the result of a hash function. In case of MD5, as a CRHF we get 128-bit
 output from the hash function. So instead of using a new hash function which again garbles
 the full 128 bit in a computationally expensive function, we can decide that we can extract
@@ -101,7 +107,7 @@ hash values. Or we shift by 1,13,25,...,109 and so on.
 With that particular calculated output hash value we can directly access any array, and do 
 the readout whether this document id is still a candidate worth inspecting or is eliminated 
 by the Bloom-Filter. The catch is, that we can directly operate on the document id for this 
-bloom filter, without spending additional compute for another hash function.
+Bloom-filter, without spending additional compute for another hash function.
 
 ## Different Hash Sizes to Control reject rate
 
@@ -166,7 +172,7 @@ the hash function with something very very simple.
 
 ## TLDR
 
-This is basically the most computationally effective / fastest hash function for a bloom filter. 
+This is basically the most computationally effective / fastest hash function for a Bloom-filter. 
 
 * ``document_id`` - result of a CRHF (collision resistant hash function, e.g. 128 bit (MD5) or longer)
 * ``slice_position`` - bit position where the hash is extracted from the ``document_id``
@@ -184,7 +190,7 @@ Perform Test:
 
     hfbfilterdata [ extracted_hash_value ] != 0
 
-This is basically a bloom filter implementation done in two lines of code. Which is basically 
+This is basically a Bloom-filter implementation done in two lines of code. Which is basically 
 indistinguishable from a bounded memory access. The idea is to basically skip the hashing of
 an already CRHF generated hash value and replacing it by hash value extraction. In case you 
 want to test a list of hashed document origin IDs against a set of hashed document 
