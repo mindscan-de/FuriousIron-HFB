@@ -111,7 +111,9 @@ evenly distributed hash values for a Bloom-filter.
 ## Sampling the Document ID
 
 Sampling the document IDs is actually quite simple. This can be done with a 'right-shift'
-operation (SHR) and an 'and' operation (AND), other ways are Bitextract operations (BEXTR).
+operation (SHR) and an 'and' operation (AND), other ways are bit extract operations (BEXTR).
+At least SHR and AND are both basic CPU operations, which are present since the very first 
+microprocessor generations. They usually take only one CPU clock cycle each.
 
 Therefore a new parameterizable hash function can be defined, with two parameters ``start`` 
 and ``len``: 
@@ -119,34 +121,46 @@ and ``len``:
     H_start_len_(document_id) = (document_id >> start) & ((1 << len) - 1)
     
 where ``document_id`` is the document id we want to test or insert into a Bloom-filter array,
-and ```start`` is the start position from where we want to extract ''len'' bits in a row.
+and ``start`` is the start position from where we want to extract ``len`` bits in a row.
 
     H_20_10(X) = (X >> 20) & 0x03ff
     
-This is how a hash extractor can be parameterized, and how to extract hash values from a
-larger hash value.
+This is how a hash extractor can be parameterized and how to extract hash values from a
+larger hash value, using two degrees of freedom.
+
+If we need multiple independent hash values, each of 10 bit length: We can use H_0_10, H_10_10
+and H_20_10 or any other ```start```value, where ``start + len <= ||document_id||``. If you 
+need 10 hashes with length 12 use H_0_12, H_12_12, H_24_12 ... H_108_12.
+
+These hash values are independent to each other as long as their extractions don't overlap. As 
+long as start of one hash function is not the range of [start of second, start of second+len]
+and the other way around. They are independent because a CRHF was used to create these document
+IDs in the first place. If multiple hash functions are required for these document IDs, then
+we just select a good ``start`` parameter for each of them.
+
+This extracted hash value usually represents the index in memory, where to look and to decide
+whether this hash value was known before or not, during the insert phase into a Bloom-filter.
+
+The full access looks then something like this to access the bloom filter data using (``H_20_10``),
+for every document ID denoted as ``X``
+
+    bloom_filter_data[(X >> 20) & 0x03ff]
+
+This is indistinguishable from a simple bounded memory access. A combination of bloom_filter_data,
+and a parameterized hash function is called a HFB filter bank. Each HFB filter bank has its own
+bloom_filter_data, for a particular set of document IDs.
+
+A HFB filter is a collection of one or multiple HFB filter bank(s).
+
+The catch is, that we can directly operate on the document id for this Bloom-filter, 
+without spending additional compute for another hash function, and those bound checks 
+would be implemented anyways, to avoid out of bound memory accesses.
+
+## Controlling ``len`` to Control the Reject Rate
 
 ----
 TODO: rework this.
 
-This gives us a computationally very efficient hash function, which is indistinguishable from
-a normal memory operation, where we ensure that the memory we access can't exceed a defined
-size. We also can extract multiple independent hash values, one size 10 with shift zero,
-or one with a size of 22 bit a bit shift by 44. The hash vales do not correlate, since their
-input hash value is computed and created once using a CRHF. Therefore "computing" different
-hash values doesn't require to invent different hash functions, we just go for a different
-combination of bits to right shift and hash function output size.
-
-So lets say we need 10 different hash values of 12 bit output length, we can shift by
-0,12,24,36,48,60,72,84,96,108 and and with 0xfff to get 10 different easy to calculate
-hash values. Or we shift by 1,13,25,...,109 and so on. 
-
-With that particular calculated output hash value we can directly access any array, and do 
-the readout whether this document id is still a candidate worth inspecting or is eliminated 
-by the Bloom-Filter. The catch is, that we can directly operate on the document id for this 
-Bloom-filter, without spending additional compute for another hash function.
-
-## Different Hash Sizes to Control reject rate
 
 Each Set of documents stored in a HFB-Filter can provide its own "parameterizable" hash 
 function. If the number of inserted document ids into the HFB-Filter is 12000. Then you 
