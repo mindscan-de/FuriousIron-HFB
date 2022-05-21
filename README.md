@@ -85,11 +85,10 @@ Bloom-filters need a hash function to work. The reason for the hash function is 
 input values across some output set in a random fashion. Usually a non-even input distribution
 is mapped to a more even output distribution.
 
-But since we use the document ID and want to check, whether it is included a set of known 
-document IDs, any hash function would already try to evenly distribute a CRHF derived hash
-value. CRHF main objective is to have a hash function which is collision resistant. There
-fore if we sample the hash value itself, this would already provide enough evenly distributed
-values.
+But since we use the document ID and want to check, whether it is included a set of
+known document IDs, any hash function would basically try to evenly distribute a CRHF 
+derived hash value. CRHF main objective is to have a hash function which is collision 
+resistant. 
 
 From a point of view, since we can't predict the output of a hash value, it is basically
 random. Putting random values into another hash function is just a waste of CPU-cycles.
@@ -103,8 +102,16 @@ as one-way-hash-functions, but that doesn't hurt either.
 
 So instead of using another function like Murmur, Adler32, CRC or any other home-grown 
 algorithm, which again garbles the full 128 bit using a computationally expensive function, 
-we can decide that we can simply extract hash values of any size from the already computed 
-128-bit hash result. 
+we can conclude that we can simply extract/sample hash values of any size (smaller than the
+output size of the hash function) from the already computed 128-bit hash result.
+
+That means we simply sample the hash value itself, this would already provide enough 
+evenly distributed hash values for the Bloom-filter.
+
+## Sampling the Cryptographic Hash Value
+
+----
+TODO: rework this.
 
 We can do that by
 a right-shift-operation and an and-operation. Therefore we can parameterize the new hash
