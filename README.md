@@ -141,14 +141,14 @@ we just select a good ``start`` parameter for each of them.
 This extracted hash value usually represents the index in memory, where to look and to decide
 whether this hash value was known before or not, during the insert phase into a Bloom-filter.
 
-The full access looks then something like this to access the bloom filter data using (``H_20_10``),
+The full access looks then something like this to access the HFB filter data using (``H_20_10``),
 for every document ID denoted as ``X``
 
-    bloom_filter_data[(X >> 20) & 0x03ff]
+    hfb_filter_data[(X >> 20) & 0x03ff]
 
-This is indistinguishable from a simple bounded memory access. A combination of bloom_filter_data
+This is indistinguishable from a simple bounded memory access. A combination of hfb_filter_data
 and a parameterized hash function is called a HFB filter bank. Each HFB filter bank has its own
-bloom_filter_data and its own parameterized hash function for a particular set of document IDs.
+hfb_filter_data and its own parameterized hash function for a particular set of document IDs.
 
 A HFB filter is a collection of one or multiple HFB filter bank(s).
 
