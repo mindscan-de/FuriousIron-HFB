@@ -146,15 +146,18 @@ for every document ID denoted as ``X``
 
     bloom_filter_data[(X >> 20) & 0x03ff]
 
-This is indistinguishable from a simple bounded memory access. A combination of bloom_filter_data,
+This is indistinguishable from a simple bounded memory access. A combination of bloom_filter_data
 and a parameterized hash function is called a HFB filter bank. Each HFB filter bank has its own
-bloom_filter_data, for a particular set of document IDs.
+bloom_filter_data and its own parameterized hash function for a particular set of document IDs.
 
 A HFB filter is a collection of one or multiple HFB filter bank(s).
 
 The catch is, that we can directly operate on the document id for this Bloom-filter, 
-without spending additional compute for another hash function, and those bound checks 
-would be implemented anyways, to avoid out of bound memory accesses.
+without spending additional compute for another hash function and those bound checks 
+would be implemented and required anyways, to avoid out of bound memory accesses. This
+means that a single SHR operation on a document_id replaces all the compute effort of 
+a hash function implementation nevertheless how fast and efficient it is. A single SHR
+operation will not be beaten.
 
 ## Controlling ``len`` to Control the Reject Rate
 
