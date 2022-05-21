@@ -11,7 +11,7 @@ but simplifying Bloom-filters down to basically two lines of code is nonetheless
 If you like this approach or cite it please link back to this repository and cite this 
 project URL. If you want to cite this 
 
-    ```'Hash-Free-Bloom-Filters'. Maxim Gansert. 2022. (https://github.com/mindscan-de/FuriousIron-HFB).```
+    'Hash-Free-Bloom-Filters'. Maxim Gansert. 2022. (https://github.com/mindscan-de/FuriousIron-HFB).
 
 Maybe I should write a paper on it... Please enjoy:
 
