@@ -82,7 +82,7 @@ different calculated hash value.
 ## Hash-Free-Bloom-Filters
 
 Bloom-filters need a hash function to work. The reason for the hash function is to distribute
-input values across some output set in a random fashion. Usually a non-even input distribution
+input values across some output set in a random fashion. Usually a uneven input distribution
 is mapped to a more even output distribution.
 
 But since we use the document ID and want to check, whether it is included a set of
@@ -99,6 +99,10 @@ any other Message Authentication Code already did the job, to create an evenly d
 but non predictable output. Although it can be calculated rather than predicted. We are
 actually not interested in the properties that cryptographic hash functions are considered
 as one-way-hash-functions, but that doesn't hurt either. 
+
+The hash values of CRHF are already distributed evenly, and every single output bit has an 
+even distribution. Each and every output bit is uncorrelated to every other bit of the hash 
+function.
 
 So instead of using another function like Murmur, Adler32, CRC or any other home-grown 
 algorithm, which again garbles the full 128 bit using a computationally expensive function, 
@@ -128,9 +132,9 @@ and ``start`` is the start position from where we want to extract ``len`` bits i
 This is how a hash extractor can be parameterized and how to extract hash values from a
 larger hash value, using two degrees of freedom.
 
-If we need multiple independent hash values, each of 10 bit length: We can use H_0_10, H_10_10
-and H_20_10 or any other ```start```value, where ``start + len <= ||document_id||``. If you 
-need 10 hashes with length 12 use H_0_12, H_12_12, H_24_12 ... H_108_12.
+If multiple independent hash values are needed, each of 10 bit length: We can use H_0_10, 
+H_10_10 and H_20_10 or any other ```start```value, where ``start + len <= ||document_id||``
+is satisfied. If ten hashes with length 12 are required then use H_0_12, H_12_12, H_24_12 ... H_108_12.
 
 These hash values are independent to each other as long as their extractions don't overlap. As 
 long as start of one hash function is not the range of [start of second, start of second+len]
