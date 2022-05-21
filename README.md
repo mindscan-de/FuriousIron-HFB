@@ -9,11 +9,11 @@ this Hash-Free-Bloom-Filter an algorithm would overstate the two lines of implem
 but simplifying Bloom-filters down to basically two lines of code is nonetheless art.
 
 If you like this approach or cite it please link back to this repository and cite this 
-project URL.
+project URL. If you want to cite this 
 
-Maybe I should write a paper on it...
+    'Hash-Free-Bloom-Filters'. Maxim Gansert. 2022. (https://github.com/mindscan-de/FuriousIron-HFB).
 
-Please enjoy:
+Maybe I should write a paper on it... Please enjoy:
 
 ## Hash-Free-Bloom  (HFB)
 
@@ -108,7 +108,7 @@ output size of the hash function) from the already computed 128-bit hash result.
 That means we simply sample the hash value itself, this would already provide enough 
 evenly distributed hash values for the Bloom-filter.
 
-## Sampling the Cryptographic Hash Value
+## Sampling the Document ID
 
 ----
 TODO: rework this.
