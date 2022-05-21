@@ -55,13 +55,13 @@ on them.
 Document IDs are treated as an identifier to the real document. This identifier is
 calculated only once for every document, once it enters the search index.
 
-In a proof-of-concept we are looking whether a certain document ID is contained in a 
-set of document IDs using a HFB-FilterBank. The important point for the document ID
-is, that it is a result of a collision resistant hash function (CRHF). 
+In a proof-of-concept we are looking whether a certain document ID is contained in a set of 
+document IDs using a HFB-FilterBank. The important point for the document ID is, that it is 
+a result of a collision resistant hash function (CRHF). 
 
-The document ID of this hash function can be obtained by hashing the content or by 
-hashing the origin of this document for example. The hash value can now be used to 
-address/identify a particular document or the content of a particular document.
+The document ID of this hash function can be obtained by hashing the content or by hashing 
+the origin of this document for example. This hash value can be used to address / identify 
+a particular document or the content of a particular document.
 
 ## Bloom-Filters
 
@@ -75,9 +75,9 @@ the insertion phase, or a different value created a collision resulting in the s
 Therefore a non-zero value means that the searched value was maybe part of the data set
 inserted into the Bloom-filter.
  
-When we repeat this question with different hash functions for the same value and 
-then repeat the lookup in a different array, the risk of a false positive, reduces
-with each different calculated hash value.
+When we repeat this question with different hash functions for the same value and then 
+repeat the lookup in a different array, the risk of a false positive, reduces with each 
+different calculated hash value.
 
 ## Hash Free Bloom-Filters
 
