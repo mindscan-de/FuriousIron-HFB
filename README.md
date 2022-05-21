@@ -3,9 +3,9 @@
 HFB Implementation - Proof of Concept
 
 This is a proof of concept code for a hash-function free bloom filter, which I use for my 
-own developed source code search engine. It took me some iterations to simplify the concept
-of a bloom filter that much, that there is now basically no algorithm left. Calling this
-Hash-Free-Bloom-Filter an algorithm would overstate the two lines of implementing code
+personally developed source code search engine. It took me some iterations to simplify the
+concept of a bloom filter that much, that there is now basically no algorithm left. Calling
+this Hash-Free-Bloom-Filter an algorithm would overstate the two lines of implementing code
 but simplifying Bloom-Filters down to basically two lines of code is nonetheless art.
 
 If you like this approach or cite it please link back to this repository and cite this 
@@ -21,9 +21,6 @@ HFB stands for Hash-Free-Bloom I'm not sure whether someone already did somethin
 not, but I'm not bothered enough to figure that out. Essentially this is a way which I came 
 up with, to implement a test for "doesn't contain".
 
-I looked for an efficient way to effectively test whether a document contains a certain search 
-term or not.
-
 Bloom-Filters answer the question whether a value is not included. But can't answer a sure
 yes. Each yes is either a sure yes or a false positive. But a no is always a no. Anyhow when 
 implementing a search engine, the scenario basically is to drop potential documents which do 
@@ -34,14 +31,37 @@ to be computed that effectively that it is basically indistinguishable from a me
 Making this a practically hash function free Bloom-Filter. The only remaining computational
 effort is a memory lookup to decide, whether a candidate can be dropped or not.
 
+Hash-Free-Bloom Filters work only in a special circumstance, which I want to outline next. 
+
+## Preconditions
+
+I looked for an efficient way to effectively test whether a document may contain a certain 
+search term or not by using an inverse index. For each trigram a complete list of document
+IDs is maintained, where this particular trigram is included in the document at least once.
+
+In case a word or phrase is searched for, every possible trigram is generated from the 
+search query term. The intermediate candidate documents are only those, where the same 
+document ID is listed for every of these trigrams. 
+
+The whole search operation works mostly exclusively on document IDs for the very first 
+candidate stage. Also the metadata search is working on the same document IDs as well.
+
+The HFB filter doesn't look for the content of the document, but rather weeds out, documents
+where the particular search term is technically not even possible, so that no time is wasted
+on them.
+
 ## Document IDs
 
-In a proof-of-concept we are looking whether a certain document ID is contained in a set of 
-documentIDs using a HFB-FilterBank. The important point is, that the document ID is a result
-of a collision resistant hash function (CRHF). The document ID of this hash function can be
-obtained by hashing the content or by hashing the origin of this document for example. The
-hash value can now be used to address a particular document or the content of a particular
-document.
+Document IDs are treated as an identifier to the real document. This identifier is
+calculated only once for every document, once it enters the search index.
+
+In a proof-of-concept we are looking whether a certain document ID is contained in a 
+set of document IDs using a HFB-FilterBank. The important point for the document ID
+is, that it is a result of a collision resistant hash function (CRHF). 
+
+The document ID of this hash function can be obtained by hashing the content or by 
+hashing the origin of this document for example. The hash value can now be used to 
+address/identify a particular document or the content of a particular document.
 
 ## Bloom-Filters
 
