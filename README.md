@@ -8,18 +8,18 @@ concept of a Bloom-filter that much, that there is now basically no algorithm le
 this Hash-Free-Bloom-Filter an algorithm would overstate the two lines of implementing code
 but simplifying Bloom-filters down to basically two lines of code is nonetheless art.
 
-If you like this approach or cite it please link back to this repository and cite this 
-project URL. If you want to cite this 
+If you like this approach or cite it, please link back to this repository and cite this 
+project URL using:
 
     'Hash-Free-Bloom-Filters'. Maxim Gansert. 2022. (https://github.com/mindscan-de/FuriousIron-HFB).
 
 Maybe I should write a paper on it... Please enjoy:
 
-## Hash-Free-Bloom  (HFB)
+## Hash-Free-Bloom (HFB)
 
-HFB stands for Hash-Free-Bloom I'm not sure whether someone already did something similar or
-not, but I'm not bothered enough to figure that out. Essentially this is a way which I came 
-up with, to implement a test for "doesn't contain".
+HFB stands for Hash-Free-Bloom. I'm not sure whether someone already did something similar
+or not, but I'm not bothered enough to figure that out. Essentially this is a way which I 
+came up with, to implement a test for "doesn't contain".
 
 Bloom-filters answer the question whether a value is not included in a set. But can't answer
 a sure yes. Each yes is either a sure yes or a false positive. But a 'no' is always a 'no'. 
@@ -106,19 +106,28 @@ we can conclude that we can simply extract/sample hash values of any size (small
 output size of the hash function) from the already computed 128-bit hash result.
 
 That means, that we simply sample the hash value itself, this will already provide enough 
-evenly distributed hash values for the Bloom-filter.
+evenly distributed hash values for a Bloom-filter.
 
 ## Sampling the Document ID
 
+Sampling the document IDs is actually quite simple. This can be done with a 'right-shift'
+operation (SHR) and an 'and' operation (AND), other ways are Bitextract operations (BEXTR).
+
+Therefore a new parameterizable hash function can be defined, with two parameters ``start`` 
+and ``len``: 
+
+    H_start_len_(document_id) = (document_id >> start) & ((1 << len) - 1)
+    
+where ``document_id`` is the document id we want to test or insert into a Bloom-filter array,
+and ```start`` is the start position from where we want to extract ''len'' bits in a row.
+
+    H_20_10(X) = (X >> 20) & 0x03ff
+    
+This is how a hash extractor can be parameterized, and how to extract hash values from a
+larger hash value.
+
 ----
 TODO: rework this.
-
-We can do that by
-a right-shift-operation and an and-operation. Therefore we can parameterize the new hash
-function with basically two parameters, the number of bits to shift to the right and the 
-number of bits to keep with an and operation (e.g. 10 bits to keep -- an and operation with 0x3ff)
-
-Instead of a hash value calculation we simply extract hash values from a larger hash value.
 
 This gives us a computationally very efficient hash function, which is indistinguishable from
 a normal memory operation, where we ensure that the memory we access can't exceed a defined
