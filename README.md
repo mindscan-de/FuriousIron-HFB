@@ -21,14 +21,14 @@ HFB stands for Hash-Free-Bloom I'm not sure whether someone already did somethin
 not, but I'm not bothered enough to figure that out. Essentially this is a way which I came 
 up with, to implement a test for "doesn't contain".
 
-Bloom-filters answer the question whether a value is not included. But can't answer a sure
-yes. Each yes is either a sure yes or a false positive. But a no is always a no. Anyhow when 
-implementing a search engine, the scenario basically is to drop potential documents which do 
-not contain one or more search terms, which we are specifically looking for.
+Bloom-filters answer the question whether a value is not included in a set. But can't answer
+a sure yes. Each yes is either a sure yes or a false positive. But a 'no' is always a 'no'. 
+Anyhow when implementing a search engine, the scenario basically is to drop potential documents
+which don't contain one or more search terms, which we are specifically looking for.
 
 This Hash-Free-Bloom-Filter comes with a kind of clever hash function, which allows the hash
-to be computed that effectively that it is basically indistinguishable from a memory lookup. 
-Making this a practically hash function free Bloom-Filter. The only remaining computational
+to be computed that efficiently that it is effectively indistinguishable from a memory lookup. 
+Making this a virtually hash function free Bloom-Filter. The only remaining computational
 effort is a memory lookup to decide, whether a candidate can be dropped or not.
 
 Hash-Free-Bloom-Filters work only in a special circumstance, which I want to outline next. 
@@ -105,7 +105,7 @@ algorithm, which again garbles the full 128 bit using a computationally expensiv
 we can conclude that we can simply extract/sample hash values of any size (smaller than the
 output size of the hash function) from the already computed 128-bit hash result.
 
-That means we simply sample the hash value itself, this would already provide enough 
+That means, that we simply sample the hash value itself, this will already provide enough 
 evenly distributed hash values for the Bloom-filter.
 
 ## Sampling the Document ID
