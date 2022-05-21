@@ -21,7 +21,7 @@ HFB stands for Hash-Free-Bloom I'm not sure whether someone already did somethin
 not, but I'm not bothered enough to figure that out. Essentially this is a way which I came 
 up with, to implement a test for "doesn't contain".
 
-Bloom-Filters answer the question whether a value is not included. But can't answer a sure
+Bloom-filters answer the question whether a value is not included. But can't answer a sure
 yes. Each yes is either a sure yes or a false positive. But a no is always a no. Anyhow when 
 implementing a search engine, the scenario basically is to drop potential documents which do 
 not contain one or more search terms, which we are specifically looking for.
@@ -79,13 +79,34 @@ When we repeat this question with different hash functions for the same value an
 repeat the lookup in a different array, the risk of a false positive, reduces with each 
 different calculated hash value.
 
-## Hash Free Bloom-Filters
+## Hash-Free-Bloom-Filters
 
-Bloom-filters need a hash function to work properly. But does it make any sense to make new
-hash calculations for the result of a hash function. In case of MD5, as a CRHF we get 128-bit
-output from the hash function. So instead of using a new hash function which again garbles
-the full 128 bit in a computationally expensive function, we can decide that we can extract
-hash values of any size from the already computed 128-bit hash result. We can do that by
+Bloom-filters need a hash function to work. The reason for the hash function is to distribute
+input values across some output set in a random fashion. Usually a non-even input distribution
+is mapped to a more even output distribution.
+
+But since we use the document ID and want to check, whether it is included a set of known 
+document IDs, any hash function would already try to evenly distribute a CRHF derived hash
+value. CRHF main objective is to have a hash function which is collision resistant. There
+fore if we sample the hash value itself, this would already provide enough evenly distributed
+values.
+
+From a point of view, since we can't predict the output of a hash value, it is basically
+random. Putting random values into another hash function is just a waste of CPU-cycles.
+
+In case of MD5, as a CRHF we retrieve an unpredictable and well distributed 128-bit output 
+from the MD5-hash function. Any other cryptographic hash function, MD4, SHA1, SHA256, or
+any other Message Authentication Code already did the job, to create an evenly distributed
+but non predictable output. Although it can be calculated rather than predicted. We are
+actually not interested in the properties that cryptographic hash functions are considered
+as one-way-hash-functions, but that doesn't hurt either. 
+
+So instead of using another function like Murmur, Adler32, CRC or any other home-grown 
+algorithm, which again garbles the full 128 bit using a computationally expensive function, 
+we can decide that we can simply extract hash values of any size from the already computed 
+128-bit hash result. 
+
+We can do that by
 a right-shift-operation and an and-operation. Therefore we can parameterize the new hash
 function with basically two parameters, the number of bits to shift to the right and the 
 number of bits to keep with an and operation (e.g. 10 bits to keep -- an and operation with 0x3ff)
