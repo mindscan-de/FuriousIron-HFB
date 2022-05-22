@@ -123,7 +123,7 @@ output size of the hash function) from the already computed 128-bit hash result.
 That means, that we simply sample the hash value itself, this will already provide enough 
 evenly distributed hash values for a Bloom-filter.
 
-## Sampling the Document ID
+### Sampling the Document ID
 
 Sampling the document IDs is actually quite simple. This can be done with a 'right-shift'
 operation (SHR) and an 'and' operation (AND), other ways are bit extract operations (BEXTR).
@@ -175,7 +175,7 @@ that a single SHR operation on a document_id replaces all the compute effort of 
 implementation nevertheless how fast and efficient it is. A single SHR operation as a 
 replacement for a hash-function will computationally wise not be beaten.
 
-## Controlling ``len`` to Control the Reject Rate
+### Controlling ``len`` to Control the Reject Rate
 
 Each set of documents stored in a HFB filter bank has its own parameterizable hash function 
 having two parameters, ``start`` and ``len``. We could see that we can control the number of
@@ -279,20 +279,24 @@ can not be reconstructed.
 
 ## Combine HFB-Filters with other Bloom-Filter solutions
 
-All the other modifications, like counting Bloom-Filters are still possible - I just replaced
-the hash function with something very very simple. 
+All the other modifications, like counting Bloom-Filters are still possible - just the hash function
+was replaced with something more efficient. 
 
-## TLDR
+## TLDR;
 
-This is basically the most computationally effective / fastest hash function for a Bloom-filter. 
+This proof of concept presents the most computationally efficient and fastest hash function for 
+Bloom-filters. The hash function is reduced to only two CPU instructions (SHR, AND). This algorithms 
+efficiency depends heavily on the data which this HFB filter processes. As soon as it is practically 
+random and has at least a bit size of 64 or 128 bits (like for unique identifiers), then this approach 
+works.
 
 * ``document_id`` - result of a CRHF (collision resistant hash function, e.g. 128 bit (MD5) or longer)
-* ``slice_position`` - bit position where the hash is extracted from the ``document_id``
-* ``slice_mask`` - the lowest n bits depending on output size, number of document IDs, sparsity or desired drop-out-rate are set, all other are set to zero
+* ``slice_start`` - bit position where the hash is extracted from the ``document_id`` starts
+* ``slice_mask`` - the lowest n bits depending on output size, number of document IDs, sparsity or desired drop-out-rate are set, all other bits are set to zero
 
 Hash calculation / Hash extraction
 
-    extracted_hash_value = ( document_id >> slice_position ) & slice_mask
+    extracted_hash_value = ( document_id >> slice_start ) & slice_mask
     
 Insert DocumentId
 
