@@ -177,19 +177,61 @@ replacement for a hash-function will computationally wise not be beaten.
 
 ## Controlling ``len`` to Control the Reject Rate
 
+Each set of documents stored in a HFB filter bank has its own parameterizable hash function 
+having two parameters, ``start`` and ``len``. We could see that we can control the number of
+uncorrelated hash functions using ``start`` and ``len``.
+
+Lets assume the number of inserted document IDs into the HFB-Filter is 12000. A ``len`` of
+12 bits (representing 4096 memory positions) will lead to only very few memory positions 
+containing a zero value, considering the random nature of the document ID generation. 
+
+If a ``len`` of 14 bits (representing 16384) a maximum of 12.000 memory positions are
+non-zero after the insertion phase. Usually less than 12000 memory positions are non-zero, 
+because of collisions (this creates more memory positions containing zeros). About 25%
+of memory positions are zero.
+
+If a ``len`` of 16 bit (representing 65536) is selected, still a maximum of 12.000 memory 
+positions are non-zero there can't be more positions filled after the insertion phase. That 
+means that there are now >80% memory positions containing a zero value.
+
+Therefore a random test would have a rejection rate of 25% (for len==14) and over 80% 
+(for len==16) for a randomly selected document ID. The number of zero positions determines
+the reject rate and therefore inversely the false positive rate for one particular filter
+bank. 
+
+The more zeros in the filter bank data compared to the available memory positions, the higher 
+the rejection rate. The lesser non-zero values compared to the available memory positions the
+lesser the false positive rate. 
+
+Another way to reduce the false positive rate is to use multiple filter banks for the test
+in a serial manner. You test with the first filter bank it either responds with 'maybe' or 
+'no'. But then you ask the second filter bank, which is using its own hash function to re
+test the same document ID, and if it was a false positive the chances are good that it will
+be identified as a false positive with still a 'maybe' or a 'no'. In case of a 'no' the 
+first test was a false positive. And so on. You either can continue until you checked all
+HFB filter banks or you stop, when your confidence is high enough.
+
+Lets assume a 80% rejection rate and therefore a 20% false positive rate
+
+* 1st iteration using first filter: 20% likelihood to be a false positive
+* 2nd iteration using second filter: 4% likelihood still to be a false positive
+* 3rd iteration using third filter: 0.8% likelihood still to be a false positive
+* 4th iteration using fourth filter: 0.16% likelihood still to be a false positive
+* 5th iteration using fifth filter: 0.032% likelihood still to be a false positive
+
+You usually can reach any desired confidence, by the number of tested filter banks 
+and via the ``len`` parameter, which controls for the false positive rate inversely.
+Each extra bit in ``len`` will double the amount of memory required for the test.
+
+You can optimize the usage of the number of applied filter banks and memory size and
+storage to your needs and requirements, based on the number of documents inserted into 
+a certain HFB filter. (But this is a whole complex topic in itself.)
+
+## Filter Effectiveness Consideration leads to better Performance
+
 ----
 TODO: rework this.
 
-
-Each Set of documents stored in a HFB-Filter can provide its own "parameterizable" hash 
-function. If the number of inserted document ids into the HFB-Filter is 12000. Then you 
-can choose either to use 10 bits, which will yield in a low rejection rate, whereas an 
-output size of 16 bit, will yield a nearly 80% reject rate. For the application of one 
-filter so the memory consumption and the computational effort can still be adjusted. For
-my cases i usually want a 80% rejection rate for a filter configuration, but only execute
-three of these filters.
-
-## Filter Effectiveness Consideration leads to better Performance
 
 After inserting the documents each particular filter banks effectiveness can be calculated,
 by the number of non-zero positions in the filter bank data. By saving these with the lowest
