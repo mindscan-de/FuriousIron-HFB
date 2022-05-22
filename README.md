@@ -13,25 +13,32 @@ project URL using:
 
     'Hash-Free-Bloom-Filters'. Maxim Gansert. 2022. (https://github.com/mindscan-de/FuriousIron-HFB).
 
-Maybe I should write a paper on it... Please enjoy:
+Maybe I should write a paper on it... 
 
 ## Hash-Free-Bloom (HFB)
 
 HFB stands for Hash-Free-Bloom. I'm not sure whether someone already did something similar
-or not, but I'm not bothered enough to figure that out. Essentially this is a way which I 
-came up with, to implement a test for "doesn't contain".
+or not, but I'm not bothered enough to figure that out, nor I'm aware of a publication
+documenting this approach. Essentially this is a way which I came up with, to implement a 
+test for "doesn't contain".
 
-Bloom-filters answer the question whether a value is not included in a set. But can't answer
-a sure yes. Each yes is either a sure yes or a false positive. But a 'no' is always a 'no'. 
-Anyhow when implementing a search engine, the scenario basically is to drop potential documents
-which don't contain one or more search terms, which we are specifically looking for.
+Bloom-filters answer the question, whether a value is definitely not included in a set. 
+Bloom-filters can't answer with a sure 'yes'. Each 'yes' is either a sure 'yes' or a 
+false positive but a 'no' is always a 'no'. Anyhow when implementing a search engine, 
+the scenario basically is, to remove all the documents which don't contain one or more 
+search terms, which we are specifically searching for.
 
-This Hash-Free-Bloom-Filter comes with a kind of clever hash function, which allows the hash
-to be computed that efficiently that it is effectively indistinguishable from a memory lookup. 
-Making this a virtually hash function free Bloom-Filter. The only remaining computational
-effort is a memory lookup to decide, whether a candidate can be dropped or not.
+A Hash-Free-Bloom-Filter comes with a kind of clever hash function, which allows the hash
+to be computed that efficiently that it becomes effectively indistinguishable from a memory
+lookup. The hash function presented in this article creates a virtually hash-function-free 
+Bloom-Filter. 
 
-Hash-Free-Bloom-Filters work only in a special circumstance, which I want to outline next. 
+The whole computational effort for the hash-function presented in this article, has the
+equivalence of only two CPU instructions followed by the indexed memory lookup for every
+applied Bloom-filter. 
+
+Hash-Free-Bloom-Filters work best in special circumstances only, which I want to outline
+next.
 
 ## Preconditions
 
@@ -50,34 +57,38 @@ The HFB filter doesn't look for the content of the document, but rather weeds ou
 where the particular search term is technically not even possible, so that no time is wasted
 on them.
 
-## Document IDs
+### Document IDs
 
-Document IDs are treated as an identifier to the real document. This identifier is
+Document IDs are treated as an identifier of the real document. This identifier is
 calculated only once for every document, once it enters the search index.
 
 In a proof-of-concept we are looking whether a certain document ID is contained in a set of 
-document IDs using a HFB-FilterBank. The important point for the document ID is, that it is 
-a result of a collision resistant hash function (CRHF). 
+document IDs using a HFB-FilterBank. The first important point for the document ID is, that
+it is a result of a collision resistant hash function (CRHF) or can be derived by sampling 
+from a random process. The second important point is that this document ID is preferably 128
+bit in size or longer. I see no reason, why this algorithm shouldn't also work with shorter
+document IDs as well e.g (64 bit).
 
-The document ID of this hash function can be obtained by hashing the content or by hashing 
-the origin of this document for example. This hash value can be used to address / identify 
-a particular document or the content of a particular document.
+A document ID can be obtained by hashing the content, or by hashing the origin / location of
+this document, but is not limited to that. This hash value becomes the document ID and can be
+used to address / identify a particular document or the content of a particular document. 
 
-## Bloom-Filters
+### Bloom-Filters
 
-A Bloom-filter hashes a given value and uses this hash value to look up in some kind
+A Bloom-filter hashes a given value and uses this hash value to look it up in some kind
 of array whether this memory location contains either a zero or a non-zero value.
  
 A zero value indicates that such a hash value was never hashed during the insertion stage of
-the Bloom-filter. A non-zero value indicates that, either the hash value was hashed during
-the insertion phase, or a different value created a collision resulting in the same hash.
+the Bloom-filter. A non-zero value indicates, that, either the hash value was hashed during
+the insertion phase, or a different value calculated a collision resulting in the same hash.
  
 Therefore a non-zero value means that the searched value was maybe part of the data set
 inserted into the Bloom-filter.
  
 When we repeat this question with different hash functions for the same value and then 
 repeat the lookup in a different array, the risk of a false positive, reduces with each 
-different calculated hash value.
+different applied hash function and their calculated hash values. Many thoughts have 
+gone into reducing the amount of hash functions, to compute multiple hash values.
 
 ## Hash-Free-Bloom-Filters
 
@@ -136,32 +147,33 @@ If multiple independent hash values are needed, each of 10 bit length: We can us
 H_10_10 and H_20_10 or any other ```start```value, where ``start + len <= ||document_id||``
 is satisfied. If ten hashes with length 12 are required then use H_0_12, H_12_12, H_24_12 ... H_108_12.
 
-These hash values are independent to each other as long as their extractions don't overlap. As 
-long as start of one hash function is not the range of [start of second, start of second+len]
-and the other way around. They are independent because a CRHF was used to create these document
-IDs in the first place. If multiple hash functions are required for these document IDs, then
-we just select a good ``start`` parameter for each of them.
+These hash values are uncorrelated to each other, as long as their extractions don't overlap. As 
+long as 'start' of one hash function is not the range of [start of second .. start of second+len]
+and the other way around. They are uncorrelated because a CRHF or a random process was used to 
+create these document IDs in the first place. If multiple hash functions are required for these
+document IDs, then we just select a non-overlapping  ``start`` parameter for each of them.
 
 This extracted hash value usually represents the index in memory, where to look and to decide
 whether this hash value was known before or not, during the insert phase into a Bloom-filter.
 
-The full access looks then something like this to access the HFB filter data using (``H_20_10``),
-for every document ID denoted as ``X``
+The full access looks something like this to access the HFB filter data using (``H_20_10``),
+for every document ID denoted as ``X``:
 
     hfb_filter_data[(X >> 20) & 0x03ff]
 
 This is indistinguishable from a simple bounded memory access. A combination of hfb_filter_data
 and a parameterized hash function is called a HFB filter bank. Each HFB filter bank has its own
-hfb_filter_data and its own parameterized hash function for a particular set of document IDs.
+hfb_filter_data and its own parameterized hash function (start, len) for its particular set of 
+document IDs.
 
 A HFB filter is a collection of one or multiple HFB filter bank(s).
 
-The catch is, that we can directly operate on the document id for this Bloom-filter, 
-without spending additional compute for another hash function and those bound checks 
-would be implemented and required anyways, to avoid out of bound memory accesses. This
-means that a single SHR operation on a document_id replaces all the compute effort of 
-a hash function implementation nevertheless how fast and efficient it is. A single SHR
-operation will not be beaten.
+The catch is, that we can directly operate on the document ID for this HFB filter, without
+spending additional compute for another hash function and those bound limits (AND operation) 
+would be implemented and required anyways, to avoid out of bound memory accesses. This means 
+that a single SHR operation on a document_id replaces all the compute effort of a hash function 
+implementation nevertheless how fast and efficient it is. A single SHR operation as a 
+replacement for a hash-function will computationally wise not be beaten.
 
 ## Controlling ``len`` to Control the Reject Rate
 
