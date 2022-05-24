@@ -2,11 +2,13 @@
 
 HFB Implementation - Proof of Concept
 
-This is a proof of concept code for a hash-function free Bloom-filter, which I use for my 
-personally developed source code search engine. It took me some iterations to simplify the
-concept of a Bloom-filter that much, that there is now basically no algorithm left. Calling
-this Hash-Free-Bloom-Filter an algorithm would overstate the two lines of implementing code
-but simplifying Bloom-filters down to basically two lines of code is nonetheless art.
+This is a proof of concept code for an ultra-fast and hash-function free Bloom-filter. I use
+this proof of concept for my personally developed source code search engine.
+
+It took me some iterations to simplify the concept of a Bloom-filter that much, that there 
+is now basically no algorithm left. Calling this Hash-Free-Bloom-Filter an algorithm would 
+overstate the two lines of implementing code but simplifying Bloom-filters down to basically 
+two lines of code is nonetheless art.
 
 If you like this approach or cite it, please link back to this repository and cite this 
 project URL using:
