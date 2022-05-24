@@ -49,7 +49,7 @@ public class HFBFilterBankCompiler {
         // we assume 128 bit long document ids, and a minimum of 32 
         // documents in the filter, and a desired rejection rate of 80% for
         // each filter step.
-        compiledFilterBank.initFilters( 128, Math.min( documentIds.size(), 32 ), 5 );
+        compiledFilterBank.initFilters( 128, Math.max( documentIds.size(), 32 ), 5 );
 
         for (String documentIdStr : documentIds) {
             BigInteger documentId = new BigInteger( documentIdStr, 16 );
@@ -73,7 +73,7 @@ public class HFBFilterBankCompiler {
         // we assume 128 bit long document ids, and a minimum of 32 
         // documents in the filter, and a desired rejection rate of 
         // 80% for  each filter step.
-        compiledFilterBank.initFilters( 128, Math.min( numberOfDocuments, 32 ), 5 );
+        compiledFilterBank.initFilters( 128, Math.max( numberOfDocuments, 32 ), 5 );
 
         return compiledFilterBank;
     }
