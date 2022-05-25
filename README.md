@@ -128,7 +128,7 @@ evenly distributed hash values for a Bloom-filter.
 ### Sampling the Document ID
 
 Sampling the document IDs is actually quite simple. This can be done with a 'right-shift'
-operation (SHR) and an 'and' operation (AND), other ways are bit extract operations (BEXTR).
+operation (SHR or SHRD) and an 'and' operation (AND), other ways are bit extract operations (BEXTR).
 At least SHR and AND are both basic CPU operations, which are present since the very first 
 microprocessor generations. They usually take only one CPU clock cycle each.
 
@@ -173,9 +173,9 @@ A HFB filter is a collection of one or multiple HFB filter bank(s).
 The catch is, that we can directly operate on the document ID for this HFB filter, without
 spending additional compute for another hash function and those bound limits (AND operation) 
 would be implemented and required anyways, to avoid out of bound memory accesses. This means 
-that a single SHR operation on a document_id replaces all the compute effort of a hash function 
-implementation nevertheless how fast and efficient it is. A single SHR operation as a 
-replacement for a hash-function will computationally wise not be beaten.
+that a single SHR / SHRD operation on a document_id replaces all the compute effort of a hash
+function implementation nevertheless how fast and efficient it is. A single SHR / SHRD 
+operation as a replacement for a hash-function will computationally wise not be beaten.
 
 ### Controlling ``len`` to Control the Reject Rate
 
@@ -287,10 +287,10 @@ was replaced with something more efficient.
 ## TLDR;
 
 This proof of concept presents the most computationally efficient and fastest hash function for 
-Bloom-filters. The hash function is reduced to only two CPU instructions (SHR, AND). This algorithms 
-efficiency depends heavily on the data which this HFB filter processes. As soon as it is practically 
-random and has at least a bit size of 64 or 128 bits (like for unique identifiers), then this approach 
-works.
+Bloom-filters. The hash function is reduced to only two CPU instructions (SHR / SHRD, AND). This
+algorithms efficiency depends heavily on the data which this HFB filter processes. As soon as it
+is practically random and has at least a bit size of 64 or 128 bits (like for unique identifiers),
+then this approach works.
 
 * ``document_id`` - result of a CRHF (collision resistant hash function, e.g. 128 bit (MD5) or longer)
 * ``slice_start`` - bit position where the hash is extracted from the ``document_id`` starts
