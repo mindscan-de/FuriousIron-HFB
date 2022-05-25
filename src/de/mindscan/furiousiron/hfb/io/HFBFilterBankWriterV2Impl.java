@@ -46,6 +46,8 @@ import de.mindscan.furiousiron.hfb.HFBFilterBankWriter;
  * * Design and Analysis of Fast Text Compression Based on Quasi-Arithmetic Coding
  * * https://kuscholarworks.ku.edu/bitstream/handle/1808/7210/HoV93.qtfull.pdf;sequence=1
 
+ * Maybe we will use a different approach, using an optimized Golomb-Rice Code. Not yet decided....
+ * https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=8272498
  */
 public class HFBFilterBankWriterV2Impl implements HFBFilterBankWriter {
 
