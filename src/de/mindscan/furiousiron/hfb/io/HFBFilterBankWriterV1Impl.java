@@ -36,7 +36,8 @@ import de.mindscan.furiousiron.hfb.HFBFilterBankWriter;
 import de.mindscan.furiousiron.hfb.HFBFilterData;
 
 /**
- * 1st MVP: save full hfb-filter-bank with full filter data to disk
+ * 1st MVP: save full hfb-filter-bank with full filter data to disk [DONE]
+ * 
  * 2nd MVP: save sparse hfb-filter-banks to disk (save only those 3 or 4 with the fewest set bits in the filterdata)
  *          and adapt the filter bank to work on sparse filter data. sparse filter data is faster to load (lower IO)
  *          and faster to filter, and randomizes the bit positions, so that different portions of documentid are 

@@ -35,6 +35,17 @@ import de.mindscan.furiousiron.hfb.HFBFilterBankWriter;
  * to five we expect more zeros bits in a single byte. that will allow to compress bytes using 
  * fewer bits.
  *  
+ *  
+ * Maybe i can implement a fast encoding and/decoding state machine to create and read the
+ * golombcode. I think of a state machine which is used for quasi-arithmetic coding. Maybe
+ * i will use (quasi) arithmetic coding instead... let's see... Maybe it will be a golombcode
+ * 
+ * Golomb, S.W.: Run-Length Encodings. IEEE Transactions on Information Theory, Vol.12, September 1966, 399–401
+ * 
+ * Howard & Vitter 1993? 
+ * * Design and Analysis of Fast Text Compression Based on Quasi-Arithmetic Coding
+ * * https://kuscholarworks.ku.edu/bitstream/handle/1808/7210/HoV93.qtfull.pdf;sequence=1
+
  */
 public class HFBFilterBankWriterV2Impl implements HFBFilterBankWriter {
 
