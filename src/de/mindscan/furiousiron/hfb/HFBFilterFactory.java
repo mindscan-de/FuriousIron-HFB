@@ -25,6 +25,8 @@
  */
 package de.mindscan.furiousiron.hfb;
 
+import java.math.BigInteger;
+
 import de.mindscan.furiousiron.hfb.io.HFBFilterBankReaderV1Impl;
 import de.mindscan.furiousiron.hfb.io.HFBFilterBankWriterV1Impl;
 
@@ -41,5 +43,16 @@ public class HFBFilterFactory {
         }
 
         throw new IllegalArgumentException( "unknown file format." );
+    }
+
+    public HFBFilterBank neutralFilter() {
+        HFBFilterBank neutralFilterBank = new HFBFilterBank() {
+            @Override
+            public boolean containsDocumentId( BigInteger documentId ) {
+                return true;
+            }
+        };
+
+        return neutralFilterBank;
     }
 }
