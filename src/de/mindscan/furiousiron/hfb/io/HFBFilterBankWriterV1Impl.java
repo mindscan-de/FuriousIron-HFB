@@ -93,6 +93,7 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             // write spread factor / load factor -- 4 bytes
             writer.write( RawUtils.toByteArray4b( filterBank.getLoadFactor() ) );
 
+            // TODO: provide order for the filter banks, and maybe selection of the filter banks, by separate Collection 
             writeAllFilterbanks( filterBank, writer );
 
             writer.flush();
@@ -101,7 +102,6 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
     }
 
     private void writeAllFilterbanks( HFBFilterBank filterBank, OutputStream writer ) throws IOException {
