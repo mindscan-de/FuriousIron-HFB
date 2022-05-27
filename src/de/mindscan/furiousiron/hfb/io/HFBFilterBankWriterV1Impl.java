@@ -101,7 +101,7 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             // write spread factor / load factor -- 4 bytes
             writer.write( RawUtils.toByteArray4b( filterBank.getLoadFactor() ) );
 
-            calculateHFBFilterBankOrder( filterBank, options );
+            List<HFBFilterBankStats> order = calculateHFBFilterBankOrder( filterBank, options );
 
             // TODO: provide order for the filter banks, and maybe selection of the filter banks, by separate Collection 
             writeAllFilterbanks( filterBank, writer );
@@ -109,20 +109,17 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             writer.flush();
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
-    private void calculateHFBFilterBankOrder( HFBFilterBank filterBank, HFBFilterWriteOption... options ) {
-        // Order and Filter
-        Set<HFBFilterWriteOption> optionSet = options == null ? new HashSet<>() : Arrays.stream( options ).collect( Collectors.toSet() );
+    private List<HFBFilterBankStats> calculateHFBFilterBankOrder( HFBFilterBank filterBank, HFBFilterWriteOption... options ) {
+        Set<HFBFilterWriteOption> optionSet = convertOptionsToSet( options );
+        return filterFilterBanks( orderFilterBanks( filterBank, optionSet ), optionSet );
+    }
 
-        // TODO: Order (efficiency, start position, random)
-        List<HFBFilterBankStats> orderedFilterbanks = orderFilterBanks( filterBank, optionSet );
-
-        // TODO: Limit (ALL, FOUR, Three, ((TODO: HALF the filters, Third the filters, Below one percent (related to order), below half percent, below one per mille)))
-        List<HFBFilterBankStats> filteredAndOrdered = filterFilterBanks( orderedFilterbanks, optionSet );
+    private Set<HFBFilterWriteOption> convertOptionsToSet( HFBFilterWriteOption... options ) {
+        return options == null ? new HashSet<>() : Arrays.stream( options ).collect( Collectors.toSet() );
     }
 
     private List<HFBFilterBankStats> orderFilterBanks( HFBFilterBank filterBank, Set<HFBFilterWriteOption> optionSet ) {
@@ -144,6 +141,7 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
 
         if (optionSet.contains( HFBFilterWriteOption.ORDER_BY_EFFICIENCY )) {
             // resort but keep former order in case of same weights.
+            // as long as the filter data always has the same slice size (within one filter, Bitweight is correct, othwerwise bitweight in relation to slice size is important.
             Collections.sort( result, Comparator.comparingLong( HFBFilterBankStats::getBitweight ) );
         }
 
@@ -151,10 +149,30 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
     }
 
     private List<HFBFilterBankStats> filterFilterBanks( List<HFBFilterBankStats> orderedFilterbanks, Set<HFBFilterWriteOption> optionSet ) {
-        // TODO Auto-generated method stub
-        // TODO: Test for FOUR, Three, Half, ALL
+        if (optionSet.contains( HFBFilterWriteOption.SAVE_ALL_FILTERBANKS )) {
+            return orderedFilterbanks;
+        }
 
-        // TODO: None of these -> return all of them...
+        if (optionSet.contains( HFBFilterWriteOption.SAVE_FOUR_FILTERBANKS )) {
+            return orderedFilterbanks.stream().limit( 4 ).collect( Collectors.toList() );
+        }
+
+        if (optionSet.contains( HFBFilterWriteOption.SAVE_THREE_FILTERBANKS )) {
+            return orderedFilterbanks.stream().limit( 3 ).collect( Collectors.toList() );
+        }
+
+        if (optionSet.contains( HFBFilterWriteOption.SAVE_HALF_FILTERBANKS )) {
+            return orderedFilterbanks.stream().limit( (1 + orderedFilterbanks.size()) >> 1 ).collect( Collectors.toList() );
+        }
+
+        if (optionSet.contains( HFBFilterWriteOption.SAVE_THIRD_FILTERBANKS )) {
+            return orderedFilterbanks.stream().limit( (2 + orderedFilterbanks.size()) / 3 ).collect( Collectors.toList() );
+        }
+
+        // TODO: Limit (((TODO: Below one percent (related to order), below half percent, below one per mille)))
+        // None of these -> return all of them...
+        // save by certaincy score.
+
         return orderedFilterbanks;
     }
 
