@@ -30,7 +30,14 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import de.mindscan.furiousiron.hfb.HFBFilterBank;
 import de.mindscan.furiousiron.hfb.HFBFilterBankWriter;
@@ -87,19 +94,14 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             // [option 2: this would be more future proof if allocation mechanism changes ]
             // [option 2: number of documents still interesting, for further optimizations ]
 
-            // write GetBitsInDocumentId -- 4bytes
+            // write number of bits in DocumentId -- 4bytes
             writer.write( RawUtils.toByteArray4b( filterBank.getBitsInDocumentId() ) );
             // write Number of occurrences / number of documents -- 8 bytes
             writer.write( RawUtils.toByteArray8b( filterBank.getOccurrenceCount() ) );
             // write spread factor / load factor -- 4 bytes
             writer.write( RawUtils.toByteArray4b( filterBank.getLoadFactor() ) );
 
-            // Filter
-            // TODO: Order (efficiency, start position, random)
-            List<Object> orderedFilterbanks = orderFilterBanks( filterBank, options );
-
-            // TODO: Limit (ALL, FOUR, Three, ((TODO: HALF the filters, Third the filters, Below one percent (related to order), below half percent, below one per mille)))
-            List<Object> filteredOrdered = filterFilterBanks( orderedFilterbanks, options );
+            calculateHFBFilterBankOrder( filterBank, options );
 
             // TODO: provide order for the filter banks, and maybe selection of the filter banks, by separate Collection 
             writeAllFilterbanks( filterBank, writer );
@@ -112,31 +114,43 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
         }
     }
 
-    /**
-     * @param filterBank
-     * @param options
-     * @return
-     */
-    private List<Object> orderFilterBanks( HFBFilterBank filterBank, HFBFilterWriteOption[] options ) {
-        // TODO Auto-generated method stub
+    private void calculateHFBFilterBankOrder( HFBFilterBank filterBank, HFBFilterWriteOption... options ) {
+        // Order and Filter
+        Set<HFBFilterWriteOption> optionSet = options == null ? new HashSet<>() : Arrays.stream( options ).collect( Collectors.toSet() );
 
-        // TODO: random
-        // TODO: start position
-        // if none of them then start_position
+        // TODO: Order (efficiency, start position, random)
+        List<HFBFilterBankStats> orderedFilterbanks = orderFilterBanks( filterBank, optionSet );
 
-        // use that seed to figure out the filters by
-        // TODO: if efficiency, then reorder them by efficiency,
-        //       but keep same order for equal  
-
-        return null;
+        // TODO: Limit (ALL, FOUR, Three, ((TODO: HALF the filters, Third the filters, Below one percent (related to order), below half percent, below one per mille)))
+        List<HFBFilterBankStats> filteredAndOrdered = filterFilterBanks( orderedFilterbanks, optionSet );
     }
 
-    /**
-     * @param orderedFilterbanks
-     * @param options
-     * @return
-     */
-    private List<Object> filterFilterBanks( List<Object> orderedFilterbanks, HFBFilterWriteOption[] options ) {
+    private List<HFBFilterBankStats> orderFilterBanks( HFBFilterBank filterBank, Set<HFBFilterWriteOption> optionSet ) {
+        List<HFBFilterBankStats> result = new ArrayList<>();
+        for (int i = 0; i < filterBank.getNumberOfFilters(); i++) {
+            result.add( new HFBFilterBankStats( filterBank.getFilterData( i ), i,
+                            BitwiseCalculations.calculateBitWeight( filterBank.getFilterData( i ).getSliceData() ) ) );
+        }
+
+        if (optionSet.contains( HFBFilterWriteOption.ORDER_BY_RANDOM )) {
+            Collections.shuffle( result );
+        }
+        else if (optionSet.contains( HFBFilterWriteOption.ORDER_BY_STARTPOSITION )) {
+            // intentionally left blank - keep order of initialization
+        }
+        else {
+            // intentionally left blank - keep order of initialization
+        }
+
+        if (optionSet.contains( HFBFilterWriteOption.ORDER_BY_EFFICIENCY )) {
+            // resort but keep former order in case of same weights.
+            Collections.sort( result, Comparator.comparingLong( HFBFilterBankStats::getBitweight ) );
+        }
+
+        return result;
+    }
+
+    private List<HFBFilterBankStats> filterFilterBanks( List<HFBFilterBankStats> orderedFilterbanks, Set<HFBFilterWriteOption> optionSet ) {
         // TODO Auto-generated method stub
         // TODO: Test for FOUR, Three, Half, ALL
 
