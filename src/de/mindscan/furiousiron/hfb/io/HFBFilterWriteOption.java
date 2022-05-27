@@ -42,5 +42,7 @@ public enum HFBFilterWriteOption {
     // Save filter in order by most efficient filter banks first
     ORDER_BY_EFFICIENCY,
     // Save filter in order by start position
-    ORDER_BY_STARTPOSITION;
+    ORDER_BY_STARTPOSITION,
+    // Save filter in random order
+    ORDER_BY_RANDOM;
 }
