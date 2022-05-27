@@ -101,10 +101,9 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             // write spread factor / load factor -- 4 bytes
             writer.write( RawUtils.toByteArray4b( filterBank.getLoadFactor() ) );
 
-            List<HFBFilterBankStats> order = calculateHFBFilterBankOrder( filterBank, options );
+            List<HFBFilterBankStats> orderedSelection = calculateHFBFilterBankOrder( filterBank, options );
 
-            // TODO: provide order for the filter banks, and maybe selection of the filter banks, by separate Collection 
-            writeAllFilterbanks( filterBank, writer );
+            writeFilterbanksByOrder( filterBank, writer, orderedSelection );
 
             writer.flush();
         }
@@ -176,12 +175,12 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
         return orderedFilterbanks;
     }
 
-    private void writeAllFilterbanks( HFBFilterBank filterBank, OutputStream writer ) throws IOException {
-        // now write the number of preserved/serialized filterdata
-        // currently we will save all of them.
-        writer.write( RawUtils.toByteArray4b( filterBank.getNumberOfFilters() ) );
-        for (int filterID = 0; filterID < filterBank.getNumberOfFilters(); filterID++) {
-            writeFilterBankData( filterBank, writer, filterID );
+    private void writeFilterbanksByOrder( HFBFilterBank filterBank, OutputStream writer, List<HFBFilterBankStats> order ) throws IOException {
+        int numberOfFilters = order.size();
+
+        writer.write( RawUtils.toByteArray4b( numberOfFilters ) );
+        for (int filterID = 0; filterID < numberOfFilters; filterID++) {
+            writeFilterBankData( filterBank, writer, order.get( filterID ).getPosition() );
         }
     }
 
