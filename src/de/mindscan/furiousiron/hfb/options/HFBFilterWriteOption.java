@@ -23,7 +23,7 @@
  * SOFTWARE.
  * 
  */
-package de.mindscan.furiousiron.hfb.io;
+package de.mindscan.furiousiron.hfb.options;
 
 /**
  * 

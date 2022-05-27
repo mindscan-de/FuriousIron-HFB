@@ -34,6 +34,7 @@ import java.nio.file.StandardOpenOption;
 import de.mindscan.furiousiron.hfb.HFBFilterBank;
 import de.mindscan.furiousiron.hfb.HFBFilterBankWriter;
 import de.mindscan.furiousiron.hfb.HFBFilterData;
+import de.mindscan.furiousiron.hfb.options.HFBFilterWriteOption;
 
 /**
  * 1st MVP: save full hfb-filter-bank with full filter data to disk [DONE]

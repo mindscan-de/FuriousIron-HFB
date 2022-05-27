@@ -25,7 +25,7 @@
  */
 package de.mindscan.furiousiron.hfb;
 
-import de.mindscan.furiousiron.hfb.io.HFBFilterWriteOption;
+import de.mindscan.furiousiron.hfb.options.HFBFilterWriteOption;
 
 /**
  * 
