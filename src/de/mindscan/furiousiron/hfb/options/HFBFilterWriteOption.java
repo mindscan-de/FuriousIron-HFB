@@ -36,7 +36,14 @@ public enum HFBFilterWriteOption {
     SAVE_FOUR_FILTERBANKS,
     // only 3
     SAVE_THREE_FILTERBANKS,
+    // only half of the filter banks
+    SAVE_HALF_FILTERBANKS,
+    // only third of the filter banks
+    SAVE_THIRD_FILTERBANKS,
 
+    // SAVE_FPR_BELOW_ONE_PERCENT
+    // SAVE_FPR_BELOW_HALF_PERCENT
+    // SAVE_FPR_BELOW_ONE_PROMILE
     // ----
 
     // Save filter in order by most efficient filter banks first
