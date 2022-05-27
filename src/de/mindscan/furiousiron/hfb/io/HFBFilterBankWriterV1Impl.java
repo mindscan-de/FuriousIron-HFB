@@ -30,6 +30,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 
 import de.mindscan.furiousiron.hfb.HFBFilterBank;
 import de.mindscan.furiousiron.hfb.HFBFilterBankWriter;
@@ -93,6 +94,13 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             // write spread factor / load factor -- 4 bytes
             writer.write( RawUtils.toByteArray4b( filterBank.getLoadFactor() ) );
 
+            // Filter
+            // TODO: Order (efficiency, start position, random)
+            List<Object> orderedFilterbanks = orderFilterBanks( filterBank, options );
+
+            // TODO: Limit (ALL, FOUR, Three, ((TODO: HALF the filters, Third the filters, Below one percent (related to order), below half percent, below one per mille)))
+            List<Object> filteredOrdered = filterFilterBanks( orderedFilterbanks, options );
+
             // TODO: provide order for the filter banks, and maybe selection of the filter banks, by separate Collection 
             writeAllFilterbanks( filterBank, writer );
 
@@ -102,6 +110,38 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    /**
+     * @param filterBank
+     * @param options
+     * @return
+     */
+    private List<Object> orderFilterBanks( HFBFilterBank filterBank, HFBFilterWriteOption[] options ) {
+        // TODO Auto-generated method stub
+
+        // TODO: random
+        // TODO: start position
+        // if none of them then start_position
+
+        // use that seed to figure out the filters by
+        // TODO: if efficiency, then reorder them by efficiency,
+        //       but keep same order for equal  
+
+        return null;
+    }
+
+    /**
+     * @param orderedFilterbanks
+     * @param options
+     * @return
+     */
+    private List<Object> filterFilterBanks( List<Object> orderedFilterbanks, HFBFilterWriteOption[] options ) {
+        // TODO Auto-generated method stub
+        // TODO: Test for FOUR, Three, Half, ALL
+
+        // TODO: None of these -> return all of them...
+        return orderedFilterbanks;
     }
 
     private void writeAllFilterbanks( HFBFilterBank filterBank, OutputStream writer ) throws IOException {
