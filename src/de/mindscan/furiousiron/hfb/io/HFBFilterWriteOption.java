@@ -30,6 +30,17 @@ package de.mindscan.furiousiron.hfb.io;
  */
 public enum HFBFilterWriteOption {
 
-    SAVE_ALL_FILTERBANKS;
+    // all
+    SAVE_ALL_FILTERBANKS,
+    // only 4
+    SAVE_FOUR_FILTERBANKS,
+    // only 3
+    SAVE_THREE_FILTERBANKS,
 
+    // ----
+
+    // Save filter in order by most efficient filter banks first
+    ORDER_BY_EFFICIENCY,
+    // Save filter in order by start position
+    ORDER_BY_STARTPOSITION;
 }
