@@ -25,6 +25,8 @@
  */
 package de.mindscan.furiousiron.hfb;
 
+import de.mindscan.furiousiron.hfb.io.HFBFilterWriteOption;
+
 /**
  * 
  */
@@ -37,4 +39,13 @@ public interface HFBFilterBankWriter {
      * @param outputPath the path
      */
     void write( HFBFilterBank filterBank, String outputPath );
+
+    /**
+     * Write the content of the FilterBank to outputPath, according to the given FilterWriterOptions
+     * 
+     * @param filterBank the FilterBank to save
+     * @param outputPath the path
+     * @param options the options for the save actions
+     */
+    void write( HFBFilterBank filterBank, String outputPath, HFBFilterWriteOption... options );
 }

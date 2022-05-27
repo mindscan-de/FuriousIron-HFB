@@ -61,7 +61,14 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
      */
     @Override
     public void write( HFBFilterBank filterBank, String outputPath ) {
+        this.write( filterBank, outputPath, HFBFilterWriteOption.SAVE_ALL_FILTERBANKS, HFBFilterWriteOption.ORDER_BY_STARTPOSITION );
+    }
 
+    /** 
+     * {@inheritDoc}
+     */
+    @Override
+    public void write( HFBFilterBank filterBank, String outputPath, HFBFilterWriteOption... options ) {
         if (!outputPath.endsWith( FILE_DOT_SUFFIX )) {
             outputPath = outputPath + FILE_DOT_SUFFIX;
         }
@@ -85,12 +92,7 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             // write spread factor / load factor -- 4 bytes
             writer.write( RawUtils.toByteArray4b( filterBank.getLoadFactor() ) );
 
-            // now write the number of preserved/serialized filterdata
-            // currently we will save all of them.
-            writer.write( RawUtils.toByteArray4b( filterBank.getNumberOfFilters() ) );
-            for (int filterID = 0; filterID < filterBank.getNumberOfFilters(); filterID++) {
-                writeFilterBankData( filterBank, writer, filterID );
-            }
+            writeAllFilterbanks( filterBank, writer );
 
             writer.flush();
         }
@@ -99,6 +101,15 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
             e.printStackTrace();
         }
 
+    }
+
+    private void writeAllFilterbanks( HFBFilterBank filterBank, OutputStream writer ) throws IOException {
+        // now write the number of preserved/serialized filterdata
+        // currently we will save all of them.
+        writer.write( RawUtils.toByteArray4b( filterBank.getNumberOfFilters() ) );
+        for (int filterID = 0; filterID < filterBank.getNumberOfFilters(); filterID++) {
+            writeFilterBankData( filterBank, writer, filterID );
+        }
     }
 
     private void writeFilterBankData( HFBFilterBank filterBank, OutputStream writer, int filterID ) throws IOException {

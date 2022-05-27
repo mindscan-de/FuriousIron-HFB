@@ -60,4 +60,12 @@ public class HFBFilterBankWriterV2Impl implements HFBFilterBankWriter {
 
     }
 
+    /** 
+     * {@inheritDoc}
+     */
+    @Override
+    public void write( HFBFilterBank filterBank, String outputPath, HFBFilterWriteOption... options ) {
+        // TODO Auto-generated method stub
+
+    }
 }
