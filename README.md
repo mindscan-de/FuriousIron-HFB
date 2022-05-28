@@ -243,7 +243,7 @@ The self selecting nature of the filters, also introduces effectively a randomiz
 of the documentID is suited best to test for the presence/absence of a random tested document ID.
 Therefore every part of the candidate document ID is used to test for presence/absence depending 
 on the Document ID set in the given filter bank. This avoids that the full document id is processed 
-from left to right and it avoids that test the same bits are tested over and over again.
+from left to right and it avoids that the same bits are tested over and over again.
 
 If we test these filters with a higher probability for dropout first, the first filter will reduce
 the amount of compute wasted on non-present DocumentIDs. Therefore the test should be optimized to 

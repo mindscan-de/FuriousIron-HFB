@@ -45,13 +45,16 @@ import de.mindscan.furiousiron.hfb.HFBFilterData;
 import de.mindscan.furiousiron.hfb.options.HFBFilterWriteOption;
 
 /**
- * 1st MVP: save full hfb-filter-bank with full filter data to disk [DONE]
+ * This HFB writer implements an uncompressed hfb filter writer. It can save the HFB Filter according to different
+ * options. 
  * 
- * 2nd MVP: save sparse hfb-filter-banks to disk (save only those 3 or 4 with the fewest set bits in the filterdata)
- *          and adapt the filter bank to work on sparse filter data. sparse filter data is faster to load (lower IO)
- *          and faster to filter, and randomizes the bit positions, so that different portions of documentid are 
- *          matched, which will lead to a more consistent document drop-out rate. The randomized and more consistent
- *          drop out, will then remove documents earlier from the candidate list, saving time via non spend cpu cycles  
+ * - save full hfb-filter-bank with full filter data to disk [DONE]
+ * - save sparse hfb-filter-banks to disk (save only those 3 or 4 with the fewest set bits in the filterdata) [DONE]
+ * - save most efficient hfb-filter-banks only
+ * - sparse filter data is faster to load (lower I/O) and faster to filter, 
+ * - randomize the bit positions, so that different portions of documentid are matched, which will lead to a more 
+ *   consistent document drop-out rate. The randomized and more consistent drop out, will then remove documents 
+ *   earlier from the candidate list, saving time via non spend cpu cycles  
  */
 public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
 
