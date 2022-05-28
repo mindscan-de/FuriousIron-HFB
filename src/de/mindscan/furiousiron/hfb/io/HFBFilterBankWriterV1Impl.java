@@ -126,9 +126,9 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
 
     private List<HFBFilterBankStats> orderFilterBanks( HFBFilterBank filterBank, Set<HFBFilterWriteOption> optionSet ) {
         List<HFBFilterBankStats> result = new ArrayList<>();
-        for (int i = 0; i < filterBank.getNumberOfFilters(); i++) {
-            result.add( new HFBFilterBankStats( filterBank.getFilterData( i ), i,
-                            BitwiseCalculations.calculateBitWeight( filterBank.getFilterData( i ).getSliceData() ) ) );
+        for (int filterNumber = 0; filterNumber < filterBank.getNumberOfFilters(); filterNumber++) {
+            HFBFilterData filterData = filterBank.getFilterData( filterNumber );
+            result.add( new HFBFilterBankStats( filterData, filterNumber, BitwiseCalculations.calculateBitWeight( filterData.getSliceData() ) ) );
         }
 
         if (optionSet.contains( HFBFilterWriteOption.ORDER_BY_RANDOM )) {
@@ -183,7 +183,7 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
 
         writer.write( RawUtils.toByteArray4b( numberOfFilters ) );
         for (int filterID = 0; filterID < numberOfFilters; filterID++) {
-            writeFilterBankData( filterBank, writer, order.get( filterID ).getPosition() );
+            writeFilterBankData( filterBank, writer, order.get( filterID ).getFilterNumber() );
         }
     }
 

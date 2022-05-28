@@ -32,17 +32,17 @@ import de.mindscan.furiousiron.hfb.HFBFilterData;
  */
 public class HFBFilterBankStats {
     private final HFBFilterData data;
-    private final int position;
+    private final int filterNumber;
     private final long bitweight;
 
-    public HFBFilterBankStats( HFBFilterData data, int position, long bitweight ) {
+    public HFBFilterBankStats( HFBFilterData data, int filterNumber, long bitweight ) {
         this.data = data;
-        this.position = position;
+        this.filterNumber = filterNumber;
         this.bitweight = bitweight;
     }
 
-    public int getPosition() {
-        return position;
+    public int getFilterNumber() {
+        return filterNumber;
     }
 
     public HFBFilterData getData() {
