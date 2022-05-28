@@ -231,12 +231,13 @@ a certain HFB filter. (But this is a whole complex topic in itself.)
 
 ## Filter Efficiency Consideration leads to better Performance
 
-After inserting the documents, each particular filter bank's effectiveness can be assessed by the 
-number of non-zero positions in the filter bank data. The document IDs will generate some partial
-collisions, with respect to the start position and length of the extracted hash, resulting in fewer
-set bit positions. By saving those filter banks with the lowest weight first, we can decide to use
-these best filters first when testing, due to the higher dropout rate. We use the stochastic nature
-of the document IDs, such that each set of document self-selects its best (known) filter bank.s
+After inserting the documents, each particular filter bank's efficiency can be assessed by counting
+the number of non-zero positions in the filter bank data. The inserted document IDs will usually 
+generate some partial collisions, with respect to the start position and length of the extracted hash,
+resulting in fewer set bit positions. By saving those filter banks with the lowest weight first, we
+can decide to use these best filters first when testing, due to the higher dropout rate. We use the
+stochastic nature of the document IDs, such that each set of document self-selects its best (known) 
+filter banks.
 
 The self selecting nature of the filters, also introduces effectively a randomization, which part
 of the documentID is suited best to test for the presence/absence of a random tested document ID.
