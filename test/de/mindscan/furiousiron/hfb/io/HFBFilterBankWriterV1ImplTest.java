@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import de.mindscan.furiousiron.hfb.HFBFilterBank;
+import de.mindscan.furiousiron.hfb.options.HFBFilterWriteOption;
 
 public class HFBFilterBankWriterV1ImplTest {
 
@@ -30,7 +31,7 @@ public class HFBFilterBankWriterV1ImplTest {
 
         // tempDir.resolve( "filterbank.hfbv1" ).toString()
         // act
-        writer.write( filterBank, "D:\\myfirstFilterbank.hfbv1" );
+        writer.write( filterBank, "D:\\myfirstFilterbank.hfbv1", HFBFilterWriteOption.ORDER_BY_EFFICIENCY, HFBFilterWriteOption.SAVE_FOUR_FILTERBANKS );
 
         // assert
         // cpxuas
