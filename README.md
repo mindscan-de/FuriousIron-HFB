@@ -229,35 +229,59 @@ You can optimize the usage of the number of applied filter banks and memory size
 storage to your needs and requirements, based on the number of documents inserted into 
 a certain HFB filter. (But this is a whole complex topic in itself.)
 
-## Filter Effectiveness Consideration leads to better Performance
+## Filter Efficiency Consideration leads to better Performance
+
+After inserting the documents, each particular filter bank's effectiveness can be assessed by the 
+number of non-zero positions in the filter bank data. The document IDs will generate some partial
+collisions, with respect to the start position and length of the extracted hash, resulting in fewer
+set bit positions. By saving those filter banks with the lowest weight first, we can decide to use
+these best filters first when testing, due to the higher dropout rate. We use the stochastic nature
+of the document IDs, such that each set of document self-selects its best (known) filter bank.s
+
+The self selecting nature of the filters, also introduces effectively a randomization, which part
+of the documentID is suited best to test for the presence/absence of a random tested document ID.
+Therefore every part of the candidate document ID is used to test for presence/absence depending 
+on the Document ID set in the given filter bank. This avoids that the full document id is processed 
+from left to right and it avoids that test the same bits are tested over and over again.
+
+If we test these filters with a higher probability for dropout first, the first filter will reduce
+the amount of compute wasted on non-present DocumentIDs. Therefore the test should be optimized to 
+deny as many document IDs as early as possible, in the first test. If it is a false positive to be 
+identified as such in the second test using the second best filter.
+
+Because the most efficient filters for a particular document set are used first, the number of
+false positives in the application of the first filter is lowest, then we use the hash function
+which lead to a filter with the second lowest number of non-zero values, producing again the 
+second lowest number of false positives and so on. An Example: The first applied filter might be
+one with a bit shift of 84 and the second one with a bit shift by 24 and the third one with a bit
+shift by 108.
+
+We can decide, to not save every single filter of a filter bank, especially those with the lowest 
+drop out rates. If we decide to only save 3 or 4 filters we still have a good enough drop-out rate.
+Because we can calculate the FPR (false positive rate), we can introduce a selection criteria, to
+either save another filter or not, by calculating the remaining FPR - after each saved filter. If
+some criteria is met (below 1 percent / below half a percent / below one ten-th of a percent), we
+stop saving all remaining single filters. This leads to savings in I/O (e.g. read access to filters)
+and storage (smaller hfb filter size). And of course fewer compute, because of fewer tested single
+filters of the hfb filter.
+
+Finding an optimization for storage size vs. filter efficiency by using a smaller load factor but 
+spending more compute on an extra filter for each present document ID, is a whole topic in itself.
+
+Also you can have strategies if smaller sets are put into a hfb filter, we want to increase the 
+likelihood of a dropout, where larger document ID sets, obviously have a lower likelihood for a 
+dropout anyway. So having different loadfacors depending on the collection size is another nice
+option for optimization, which then again affects memory footprint in storage, RAM and in I/O 
+utilization. Also we still can stop evaluating hfb filterbanks, when a reasonable reduction of
+search candidates is already reached.
+
+Anyways there is plenty of room for further optimizations.
+
+## Golomb coding for HFB-FilterData
 
 ----
 TODO: rework this.
 
-
-After inserting the documents each particular filter banks effectiveness can be calculated,
-by the number of non-zero positions in the filter bank data. By saving these with the lowest
-weight first we can choose to use the best filters first (saving those with the highest dropout
-rate first), that effectively is leading to a randomization in using the filters and a better
-performance to dropout-rate for the candidate document IDs.
-
-Since the most effective filters for a particular document set are used first, the number of
-false positives in the application of the first filter is lowest, then we use the hash function
-which lead to a filter with the second lowest number of non-zero values, produces again the 
-second lowest number of false positives and so on. the first applied filter might be the one 
-with a bit shift of 84 and the second one with a bit shift by 24 and the third one with a bit
-shift by 108. This kind of natural randomization is useful, to not test the same bits over and
-over again. That will avoid to spend compute on document ids with filters with low quality 
-(those with a low rejection) rate.
-
-And because you know the false positive rate, you don't need to execute all filter banks, but
-the most effective ones first until you reach a false positive rate of maybe 0.1%. Then you 
-can stop saving that filter data to disk (saving then I/O and storage) for the HFB-Filters.
-
-You can optimize storage size vs. filter efficiency. by using e.g. one bit less for the
-output hash function, but spending compute one extra filter.
-
-## Golomb coding for HFB-FilterData
 
 Golomb Coding produces low overhead even if outout hash size increases, then just the distance between 
 two consecutive non zero values just increases, leading to a different value of "m". So the storage
