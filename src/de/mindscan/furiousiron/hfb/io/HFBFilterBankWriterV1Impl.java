@@ -203,9 +203,9 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
         writer.write( RawUtils.toByteArray4b( filterDataArray.length ) );
         writer.write( filterDataArray );
 
-        int bitweight = BitwiseCalculations.calculateBitWeight( filterDataArray );
-        int invbitweight = BitwiseCalculations.calculateInvBitWeight( filterDataArray );
-        System.out.println( String.format( "Filter #%d has %d bits set (1) and %d not set (0).", filterID, bitweight, invbitweight ) );
+        // int bitweight = BitwiseCalculations.calculateBitWeight( filterDataArray );
+        // int invbitweight = BitwiseCalculations.calculateInvBitWeight( filterDataArray );
+        // System.out.println( String.format( "Filter #%d has %d bits set (1) and %d not set (0).", filterID, bitweight, invbitweight ) );
     }
 
 }
