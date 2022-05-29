@@ -151,6 +151,8 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
     }
 
     private List<HFBFilterBankStats> filterFilterBanks( List<HFBFilterBankStats> orderedFilterbanks, Set<HFBFilterWriteOption> optionSet ) {
+        // ATTN: The order of the evaluations matter
+
         if (optionSet.contains( HFBFilterWriteOption.SAVE_ALL_FILTERBANKS )) {
             return orderedFilterbanks;
         }
@@ -158,23 +160,26 @@ public class HFBFilterBankWriterV1Impl implements HFBFilterBankWriter {
         if (optionSet.contains( HFBFilterWriteOption.SAVE_FOUR_FILTERBANKS )) {
             return orderedFilterbanks.stream().limit( 4 ).collect( Collectors.toList() );
         }
-
-        if (optionSet.contains( HFBFilterWriteOption.SAVE_THREE_FILTERBANKS )) {
+        else if (optionSet.contains( HFBFilterWriteOption.SAVE_THREE_FILTERBANKS )) {
             return orderedFilterbanks.stream().limit( 3 ).collect( Collectors.toList() );
         }
-
-        if (optionSet.contains( HFBFilterWriteOption.SAVE_HALF_FILTERBANKS )) {
+        else if (optionSet.contains( HFBFilterWriteOption.SAVE_HALF_FILTERBANKS )) {
             return orderedFilterbanks.stream().limit( (1 + orderedFilterbanks.size()) >> 1 ).collect( Collectors.toList() );
         }
-
-        if (optionSet.contains( HFBFilterWriteOption.SAVE_THIRD_FILTERBANKS )) {
+        else if (optionSet.contains( HFBFilterWriteOption.SAVE_THIRD_FILTERBANKS )) {
             return orderedFilterbanks.stream().limit( (2 + orderedFilterbanks.size()) / 3 ).collect( Collectors.toList() );
         }
 
-        // TODO: Limit (((TODO: Below one percent (related to order), below half percent, below one per mille)))
-        // None of these -> return all of them...
-        // save by certaincy score.
+        // TODO: calculate the FPR (false positive rate)
+        // calculate the remaining false positive rate and determine the number of filters
+        if (optionSet.contains( HFBFilterWriteOption.SAVE_FPR_BELOW_TWO_PROMILE )) {
+        }
+        else if (optionSet.contains( HFBFilterWriteOption.SAVE_FPR_BELOW_HALF_PERCENT )) {
+        }
+        else if (optionSet.contains( HFBFilterWriteOption.SAVE_FPR_BELOW_ONE_PERCENT )) {
+        }
 
+        // None of these -> return all of them...
         return orderedFilterbanks;
     }
 

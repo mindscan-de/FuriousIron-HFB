@@ -41,10 +41,12 @@ public enum HFBFilterWriteOption {
     // only third of the filter banks
     SAVE_THIRD_FILTERBANKS,
 
-    // SAVE_FPR_BELOW_ONE_PERCENT
-    // SAVE_FPR_BELOW_HALF_PERCENT
-    // SAVE_FPR_BELOW_ONE_PROMILE
-    // ----
+    // save all filters until the false positive rate is below 0.01
+    SAVE_FPR_BELOW_ONE_PERCENT,
+    // save all filters until the false positive rate is below 0.005
+    SAVE_FPR_BELOW_HALF_PERCENT,
+    // save all filters until the false positive rate is below 0.002
+    SAVE_FPR_BELOW_TWO_PROMILE,
 
     // Save filter in order by most efficient filter banks first
     ORDER_BY_EFFICIENCY,
