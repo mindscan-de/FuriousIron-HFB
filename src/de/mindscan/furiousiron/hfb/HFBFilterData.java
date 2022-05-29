@@ -36,6 +36,11 @@ import java.util.Arrays;
  */
 public class HFBFilterData {
 
+    // modulo by 8 (byte size in bits) is an and by 7
+    public static final int BYTE_ADDRESS_MASK = 7;
+    // divide by 8 (byte size in bits) is a shift by 3
+    public static final int BYTE_ADDRESS_SHIFT = 3;
+
     // The position (number of bits to shift right before applying the sliceBitMask.
     private int slicePosition;
 
@@ -45,13 +50,9 @@ public class HFBFilterData {
     // the mask for the bits.
     private long sliceBitMask;
 
-    // TODO should better be ints or longs to avoid any uneven memory position (thinking of performance)
-    //      maybe there is some optimized library for that bit array stuff around
-    //      but for the moment this is good enough.
-
     // contains the filter data
     private byte[] sliceData;
-    private byte[] toBitPosition = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, (byte) 0x80 };
+    private byte[] asBitPosition = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, (byte) 0x80 };
 
     private BigInteger sliceBitMaskBI;
 
@@ -76,12 +77,12 @@ public class HFBFilterData {
     }
 
     public void initEmpty() {
-        int numberOfBits = Math.max( this.sliceBitSize - 3, 0 );
+        int numberOfBits = Math.max( this.sliceBitSize - BYTE_ADDRESS_SHIFT, 0 );
         setSliceDataInternal( new byte[1 << numberOfBits] );
     }
 
     public void setSliceData( byte[] filterData ) {
-        int numberOfBits = Math.max( this.sliceBitSize - 3, 0 );
+        int numberOfBits = Math.max( this.sliceBitSize - BYTE_ADDRESS_SHIFT, 0 );
         this.sliceData = Arrays.copyOf( filterData, 1 << numberOfBits );
     }
 
@@ -114,14 +115,14 @@ public class HFBFilterData {
     }
 
     public void setIndex( int index ) {
-        this.sliceData[index >> 3] |= toBitPosition[index & 7];
+        this.sliceData[index >> BYTE_ADDRESS_SHIFT] |= asBitPosition[index & BYTE_ADDRESS_MASK];
     }
 
     public void clearIndex( int index ) {
-        this.sliceData[index >> 3] &= ~toBitPosition[index & 7];
+        this.sliceData[index >> BYTE_ADDRESS_SHIFT] &= ~asBitPosition[index & BYTE_ADDRESS_MASK];
     }
 
     public boolean isIndexSet( int index ) {
-        return (this.sliceData[index >> 3] & toBitPosition[index & 7]) != 0;
+        return (this.sliceData[index >> BYTE_ADDRESS_SHIFT] & asBitPosition[index & BYTE_ADDRESS_MASK]) != 0;
     }
 }
