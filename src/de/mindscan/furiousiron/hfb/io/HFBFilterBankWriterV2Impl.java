@@ -57,7 +57,6 @@ public class HFBFilterBankWriterV2Impl implements HFBFilterBankWriter {
      */
     @Override
     public void write( HFBFilterBank filterBank, String outputPath ) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -66,7 +65,6 @@ public class HFBFilterBankWriterV2Impl implements HFBFilterBankWriter {
      */
     @Override
     public void write( HFBFilterBank filterBank, String outputPath, HFBFilterWriteOption... options ) {
-        // TODO Auto-generated method stub
 
     }
 }

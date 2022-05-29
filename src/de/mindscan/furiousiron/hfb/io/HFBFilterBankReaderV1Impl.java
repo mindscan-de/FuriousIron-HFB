@@ -78,11 +78,9 @@ public class HFBFilterBankReaderV1Impl implements HFBFilterBankReader {
             return filterBank;
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        // TODO Auto-generated method stub
         return null;
     }
 

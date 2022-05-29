@@ -53,7 +53,6 @@ public class HFBFilterBankReaderV2Impl implements HFBFilterBankReader {
      */
     @Override
     public HFBFilterBank readFromFile( String filePath ) {
-        // TODO Auto-generated method stub
         return null;
     }
 
