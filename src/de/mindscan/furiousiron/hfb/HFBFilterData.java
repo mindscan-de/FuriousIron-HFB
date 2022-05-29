@@ -29,9 +29,10 @@ import java.math.BigInteger;
 import java.util.Arrays;
 
 /**
- * Save the filter data in a bitfield.
- * Maybe later use Golombcoding / Golombdecoding for the filter representation on disk?
- * Maybe a quasiarithmetic code?
+ * Hold hfb filter data using a bit field.
+ * 
+ * This is one particular hfb filter related to the 'slicePositon' and 'sliceBitSize'
+ * as a hash value extractor.
  */
 public class HFBFilterData {
 
@@ -44,11 +45,11 @@ public class HFBFilterData {
     // the mask for the bits.
     private long sliceBitMask;
 
-    // contains the filter data
-    // TODO should better be ints or longs to avoid any uneven memory position
-    //      thinking of performance
-    //      maybe there is some optimized library for that bitarray stuff around
+    // TODO should better be ints or longs to avoid any uneven memory position (thinking of performance)
+    //      maybe there is some optimized library for that bit array stuff around
     //      but for the moment this is good enough.
+
+    // contains the filter data
     private byte[] sliceData;
     private byte[] toBitPosition = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, (byte) 0x80 };
 
